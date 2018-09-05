@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">    
+    <head>        
+        <title>lab3</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="desc" content="An interactive html.">
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type='text/javascript' src="js/knockout.js"></script>
+        <script type='text/javascript' src="js/knockout.mapping-latest.js"></script>
+        <script type='text/javascript' src="js/myscript.js"></script>
+
+    </head>
+    
+    <body>
+        
+        <img src="screenshots/quick-edit.png" alt=":(">
+        <div id="mainContainer">
+        <nav>     
+            <a href="#ManageStudents"><button class="button button2 button_students">Manage students</button></a>
+            <a href="#ManageCourses"><button class="button button2 button_courses">Manage courses</button></a>
+       </nav>
+            <div class="column_container">
+        <div class="container" id="ManageCourses">                
+            <h1>List of Courses</h1>
+            <div class="table">  
+                <div class="row">
+                    <div class ="cell">
+                        <select name="text">
+                            <option value="Przyroda">Przyroda</option> 
+                            <option value="Matematyka">Matematyka</option>
+                            <option value="Fizyka">Fizyka</option>
+                        </select>
+                    </div>
+                    <div class ="cell">
+                        <Button id=SeeGrades>Go!</Button>
+                    </div>
+                </div>
+            </div>             
+        </div>
+        <div class="container" id="ManageStudents">
+            <h1>List of Students</h1>
+            <form id="GETstudents" action="http://localhost:8080/student" method="get">
+                <div class="table">                       
+                    <div class="row">
+                        <div class ="cell">
+                          <input placeholder="Index" id="GET-index" type="text" name="imie">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="First Name" id="GET-imie" type="text" name="imie">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Last Name" id="GET-nazwisko" type="text" name="nazwisko">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Born Date" id="GET-born_date" type="text" name="date">
+                        </div>
+                        <div class ="cell noprint">
+                        Action
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class ="cell">
+                          12312312
+                        </div>
+                       <div class ="cell">
+                          Marek
+                        </div>
+                        <div class ="cell">
+                          Antoniusz
+                        </div>
+                         <div class ="cell">
+                          14-01-83
+                        </div>
+                        <div class ="cell noprint">
+                            <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
+                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class ="cell">
+                          54353433
+                        </div>
+                       <div class ="cell">
+                          Juliusz
+                        </div>
+                        <div class ="cell">
+                          Cezar
+                        </div>
+                         <div class ="cell">
+                          13-07-02
+                        </div>
+                        <div class ="cell noprint">
+                            <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
+                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                        </div>
+
+                    </div>
+                </div>
+            </form>  
+        </div>
+        <div class="container" id="ManageSeeGrades">
+            <h1>List of Grades</h1>
+            <form id="GetGrades" action="http://localhost:8080/Oceny" method="get">
+                <div class="table">                       
+                    <div class="row">
+                        <div class ="cell">
+                          <input placeholder="Subject" id="GET-przedmiot" type="text" name="Subject">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Grade" id="GET-ocena" type="text" name="grade">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Date" id="GET-grade-date" type="text" name="grade_date">
+                        </div>
+                        <div class ="cell noprint">
+                        Action
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class ="cell">
+                          Matematyka
+                        </div>
+                       <div class ="cell">
+                          2.0
+                        </div>
+                        <div class ="cell">
+                          24-03-70
+                        </div>
+                        <div class ="cell noprint">
+                            <a href="#Change"><Button type="button" id=Change>Change</Button></a>
+                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class ="cell">
+                          Przyroda
+                        </div>
+                       <div class ="cell">
+                          3.0
+                        </div>
+                        <div class ="cell">
+                          16-06-71
+                        </div>
+                        <div class ="cell noprint">
+                            <a href="#Change"><Button type="button" id=Change>Change</Button></a>
+                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                        </div>
+                    </div>
+                </div>
+            </form>  
+        </div>
+        </div>
+        </div>
+        <br>
+        <br>
+        
+        <h1 data-bind="foreach:UsersList">
+        <div data-bind="text:imie"></div>
+        </h1>
+        
+        
+        <footer>
+        <br>
+        <ul>
+            <li><a href="https://elogin.put.poznan.pl">eLogin</a></li>
+            <li><a href="https://fc.put.poznan.pl">Wydział Informatyki</a></li>
+        </ul>
+        <p id="foot">created by Pawel Mania</p>
+    </footer>
+    </body>
+    
+</html>
