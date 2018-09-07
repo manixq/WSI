@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexes;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,21 +31,21 @@ public class Student implements Serializable
     @Id
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private Long index;
-    private String imie;
-    private String nazwisko;
+    private String firstName;
+    private String lastName;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
-    private Date Data;
+    private Date bornDate;
 
     public Student()
     {
 
     }
 
-    public Student(Long index, String imie, String nazwisko, Date data) {
+    public Student(Long index, String firstName, String lastName, Date bornDate) {
         this.index = index;
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        Data = data;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bornDate = bornDate;
     }
 
 
@@ -59,28 +58,28 @@ public class Student implements Serializable
     }
 
     @XmlElement
-    public String getImie() {
-        return imie;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     @XmlElement
-    public String getNazwisko() {
-        return nazwisko;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public Date getData() {
-        return Data;
+    public Date getBornDate() {
+        return bornDate;
     }
 
-    public void setData(Date data) {
-        Data = data;
+    public void setBornDate(Date bornDate) {
+        this.bornDate = bornDate;
     }
 }

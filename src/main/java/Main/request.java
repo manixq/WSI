@@ -1,21 +1,15 @@
 package Main;
 
 
-import ModelDanych.Ocena;
-import ModelDanych.Przedmiot;
+import ModelDanych.Grade;
+import ModelDanych.Subject;
 import ModelDanych.Student;
-import com.mongodb.MongoClient;
-import org.glassfish.jersey.server.JSONP;
-import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.*;
 
 @Path("/")
@@ -29,24 +23,24 @@ public class request
     @GET
     @Path("/student")
     @Produces({"application/xml", "application/json"})
-    public List<Student> getStudent(@DefaultValue("") @QueryParam("imie") String imie, @DefaultValue("") @QueryParam("nazwisko") String nazwisko)
+    public List<Student> getStudent(@DefaultValue("") @QueryParam("firstName") String firstName, @DefaultValue("") @QueryParam("lastName") String lastName)
     {
         final Query<Student> query = Main.datastore.createQuery(Student.class);
 
-        if(imie != "" && nazwisko != "")
+        if(firstName != "" && lastName != "")
         {
-           query.and(query.criteria("imie").containsIgnoreCase(imie),
-                            query.criteria("nazwisko").containsIgnoreCase(nazwisko));
+           query.and(query.criteria("firstName").containsIgnoreCase(firstName),
+                            query.criteria("lastName").containsIgnoreCase(lastName));
            return query.asList();
 
         }
-        else if(imie != "") {
-            return query.field("imie").equal(imie).asList();
+        else if(firstName != "") {
+            return query.field("firstName").equal(firstName).asList();
         }
 
-        else if(nazwisko != "")
+        else if(lastName != "")
         {
-            return query.field("nazwisko").equal(nazwisko).asList();
+            return query.field("lastName").equal(lastName).asList();
         }
 
 
@@ -80,9 +74,9 @@ public class request
     @GET
     @Path("/student/FilterByRating")
     @Produces({"application/xml", "application/json"})
-    public List<Ocena> getStudentFilterByRating(@DefaultValue("") @QueryParam("index") String index, @DefaultValue("") @QueryParam("subject") String subject, @DefaultValue("") @QueryParam("above") String above, @DefaultValue("") @QueryParam("below") String below)
+    public List<Grade> getStudentFilterByRating(@DefaultValue("") @QueryParam("index") String index, @DefaultValue("") @QueryParam("subject") String subject, @DefaultValue("") @QueryParam("above") String above, @DefaultValue("") @QueryParam("below") String below)
     {
-        final Query<Ocena> query = Main.datastore.createQuery(Ocena.class);
+        final Query<Grade> gradeQuery = Main.datastore.createQuery(Grade.class);
 
         final Query<Student> studentQuery = Main.datastore.createQuery(Student.class);
         if(index != "")
@@ -93,19 +87,19 @@ public class request
             {
                 if (above != "")
                 {
-                    query.and(query.criteria("wartosc").greaterThan(above),
-                            query.criteria("przypisanyStudent").equal(student));
-                    return query.asList();
+                    gradeQuery.and(gradeQuery.criteria("gradeValue").greaterThan(above),
+                            gradeQuery.criteria("referencedStudent").equal(student));
+                    return gradeQuery.asList();
                 }
                 else if (below != "")
                 {
-                    query.and(query.criteria("wartosc").lessThan(below),
-                        query.criteria("przypisanyStudent").equal(student));
-                    return query.asList();
+                    gradeQuery.and(gradeQuery.criteria("gradeValue").lessThan(below),
+                        gradeQuery.criteria("referencedStudent").equal(student));
+                    return gradeQuery.asList();
                 }
 
 
-                return query.field("przypisanyStudent").equal(student).asList();
+                return gradeQuery.field("referencedStudent").equal(student).asList();
             }
         }
 
@@ -113,121 +107,133 @@ public class request
     }
 
     @GET
-    @Path("/przedmiot")
+    @Path("/subject")
     @Produces({"application/xml", "application/json"})
-    public List<Przedmiot> getPrzedmiotByProwadzacy(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("nazwa") String nazwa)
+    public List<Subject> getSubject(@DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname, @DefaultValue("") @QueryParam("subjectName") String subjectName)
     {
-        final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+        final Query<Subject> query = Main.datastore.createQuery(Subject.class);
 
-        if(id != "")
+        if(!teacherFirstname.isEmpty())
         {
-            return query.field("idProwadzacego").equal(id).asList();
+            query.field("teacherFirstname").equal(teacherFirstname);
+
+            if(!teacherLastname.isEmpty())
+            {
+                return query.field("teacherLastname").equal(teacherLastname).asList();
+            }
+            else
+            {
+                return query.asList();
+            }
+        }
+        else if(!teacherLastname.isEmpty())
+        {
+            return query.field("teacherLastname").equal(teacherLastname).asList();
         }
 
-        if(nazwa != "")
+        if(!subjectName.isEmpty())
         {
-            return query.field("nazwa").equal(nazwa).asList();
+            return query.field("subjectName").equal(subjectName).asList();
         }
-
 
         return query.asList();
     }
 
     @GET
-    @Path("/przedmiot/{przedmiot}/oceny")
+    @Path("/subject/{subject}/grades")
     @Produces({"application/xml", "application/json"})
-    public List<Ocena> getOcenyZPrzedmiotu(@PathParam("przedmiot") String nazwa)
+    public List<Grade> getSubjectGrades(@PathParam("subject") String subjectName)
     {
-        final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+        final Query<Subject> query = Main.datastore.createQuery(Subject.class);
 
-        Przedmiot query_przedmiot =  query.field("nazwa").equal(nazwa).get();
-        return query_przedmiot.getOcena();
+        Subject query_subject =  query.field("subjectName").equal(subjectName).get();
+        return query_subject.getGradesList();
     }
 
     @GET
-    @Path("/przedmiot/{przedmiot}/studenci")
+    @Path("/subject/{subject}/students")
     @Produces({"application/xml", "application/json"})
-    public List<Student> getPrzedmiotStudenci(@PathParam("przedmiot") String nazwaPrzedmiotu)
+    public List<Student> getSubjectStudents(@PathParam("subject") String subjectName)
     {
-        final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+        final Query<Subject> query = Main.datastore.createQuery(Subject.class);
 
-        Przedmiot query_przedmiot =  query.field("nazwa").equal(nazwaPrzedmiotu).get();
-        return query_przedmiot.getStudent();
+        Subject query_subject =  query.field("subjectName").equal(subjectName).get();
+        return query_subject.getStudentsList();
     }
 
     @GET
-    @Path("/student/{studentId}/{przedmiot}/Oceny")
+    @Path("/student/{studentId}/{subject}/grades")
     @Produces({"application/xml", "application/json"})
-    public List<Ocena> getStudentOcenyZPrzedmiotu(@PathParam("przedmiot") String nazwaPrzedmiotu, @PathParam("studentId") long studentId)
+    public List<Grade> getStudentGradesFromSubject(@PathParam("subject") String subjectName, @PathParam("studentId") long studentId)
     {
-        final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+        final Query<Subject> query = Main.datastore.createQuery(Subject.class);
         final Query<Student> query2 = Main.datastore.createQuery(Student.class);
 
-        Przedmiot query_przedmiot =  query.field("nazwa").equal(nazwaPrzedmiotu).get();
+        Subject query_subject =  query.field("subjectName").equal(subjectName).get();
         Student query_student = query2.field("index").equal(studentId).get();
         //return Response.status(200).entity("Response studentId").build();
-        return query_przedmiot.getOcenaByStudent(query_student.getIndex());
+        return query_subject.getGradeByStudent(query_student.getIndex());
     }
 
     @GET
-    @Path("/student/{studentId}/przedmioty")
+    @Path("/student/{studentId}/subjects")
     @Produces({"application/xml", "application/json"})
-    public List<Przedmiot> getPrzedmiotyByStudent(@PathParam("studentId") long studentId)
+    public List<Subject> getSubjectsByStudent(@PathParam("studentId") long studentId)
     {
-        List<Przedmiot> OutPrzedmioty = new ArrayList<Przedmiot>();
-        List<Przedmiot> przedmioty = Main.datastore.createQuery(Przedmiot.class).asList();
+        List<Subject> outSubjects = new ArrayList<Subject>();
+        List<Subject> subjectsList = Main.datastore.createQuery(Subject.class).asList();
         final Query<Student> query2 = Main.datastore.createQuery(Student.class);
         Student query_student = query2.field("index").equal(studentId).get();
-        for (Przedmiot lprzedmiot :przedmioty)
+        for (Subject lSubject : subjectsList)
         {
-            if(lprzedmiot.getStudent().contains(query_student))
+            if(lSubject.getStudentsList().contains(query_student))
             {
-                OutPrzedmioty.add(lprzedmiot);
+                outSubjects.add(lSubject);
             }
         }
-        return OutPrzedmioty;
+        return outSubjects;
         //return Response.status(200).entity("Response studentId").build();
     }
 
     @POST
-    @Path("/student/dodaj")
+    @Path("/student/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
     public Response postStudent() {
         Main.datastore.save(new Student());
-        return Response.status(201).entity("dodano studenta").build();
+        return Response.status(201).entity("Added").build();
     }
 
 
     @POST
-    @Path("/Przedmiot/dodaj")
+    @Path("/Subject/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
-    public Response postPrzedmiot( @DefaultValue("") @QueryParam("name") String name)
+    public Response postSubject( @DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname)
     {
-        Main.datastore.save(new Przedmiot(name, 0L, new ArrayList<Ocena>(), new Date(), new ArrayList<Student>()));
+        Main.datastore.save(new Subject(subjectName, teacherFirstname, teacherLastname, new ArrayList<Grade>(), new ArrayList<Student>()));
 
-        return Response.status(201).entity("Dodano "+name).build();
+        return Response.status(201).entity("Added " + subjectName).build();
     }
 
     @POST
-    @Path("/Ocena/dodaj")
+    @Path("/Grade/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
-    public Response postOcena() {
-        Main.datastore.save(new Ocena(2.0, new Date(), null));
+    public Response postGrade() {
+        Main.datastore.save(new Grade(2.0, new Date(), null));
 
-        return Response.status(201).entity("dodano nowa ocene").build();
+        return Response.status(201).entity("Added new grade").build();
     }
 
     @DELETE
-    @Path("/usun/student")
-    public Response deleteStudenci(@DefaultValue("") @QueryParam("indeks") String indeks) {
+    @Path("/delete/student")
+    public Response deleteStudenci(@DefaultValue("") @QueryParam("index") String index) {
         final Query<Student> query = Main.datastore.createQuery(Student.class);
 
-        if(indeks !="")
+        if(!index.isEmpty())
         {
-            query.field("index").equal(Long.parseLong(indeks,10));
+            query.field("index").equal(Long.parseLong(index,10));
             Main.datastore.delete(query);
             return Response.status(200).build();
 
@@ -236,13 +242,13 @@ public class request
     }
 
     @DELETE
-    @Path("/usun/przedmiot")
-    public Response deletePrzedmiot(@DefaultValue("") @QueryParam("nazwa") String nazwa) {
-        final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+    @Path("/delete/subject")
+    public Response deleteSubject(@DefaultValue("") @QueryParam("subjectName") String subjectName) {
+        final Query<Subject> query = Main.datastore.createQuery(Subject.class);
 
-        if(nazwa != "")
+        if(subjectName != "")
         {
-            query.field("nazwa").equal(nazwa);
+            query.field("subjectName").equal(subjectName);
             Main.datastore.delete(query);
             return Response.status(200).build();
 
@@ -251,11 +257,11 @@ public class request
     }
 
     @DELETE
-    @Path("/usun/ocena")
-    public Response deleteOcena(@DefaultValue("") @QueryParam("id") String id) {
-        final Query<Ocena> query = Main.datastore.createQuery(Ocena.class);
+    @Path("/delete/grade")
+    public Response deleteGrade(@DefaultValue("") @QueryParam("id") String id) {
+        final Query<Grade> query = Main.datastore.createQuery(Grade.class);
 
-        if(id != "")
+        if(!id.isEmpty())
         {
             query.field("id").equal(id);
             Main.datastore.delete(query);
@@ -267,13 +273,13 @@ public class request
 
     @PUT
     @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/student/indeks")
-    public Response putStudentIndex(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("indeks") String indeks)
+    @Path("update/student/index")
+    public Response putStudentIndex(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("index") String index)
     {
-        if(id != "") {
+        if(!id.isEmpty()) {
             final Query<Student> query = Main.datastore.createQuery(Student.class);
             query.field("id").equal(id);
-            final UpdateOperations<Student> updateOperations = Main.datastore.createUpdateOperations(Student.class).set("index", Long.parseLong(indeks, 10));
+            final UpdateOperations<Student> updateOperations = Main.datastore.createUpdateOperations(Student.class).set("index", Long.parseLong(index, 10));
             final UpdateResults results = Main.datastore.update(query, updateOperations);
             return Response.status(200).build();
         }
@@ -282,22 +288,37 @@ public class request
 
     @PUT
     @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/student/imie")
-    public Response putStudentImie(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("imie") String imie)
+    @Path("update/student")
+    public Response putStudent(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("firstName") String firstName, @DefaultValue("") @QueryParam("lastName") String lastName, @DefaultValue("") @QueryParam("bornDate") String bornDate)
     {
-        if(id != "") {
+        if(!id.isEmpty()) {
             final Query<Student> query = Main.datastore.createQuery(Student.class);
             query.field("id").equal(id);
-            final UpdateOperations<Student> updateOperations = Main.datastore.createUpdateOperations(Student.class).set("imie", imie);
-            final UpdateResults results = Main.datastore.update(query, updateOperations);
+            if(!firstName.isEmpty())
+            {
+                final UpdateOperations<Student> updateOperationsFirstname = Main.datastore.createUpdateOperations(Student.class).set("imie", firstName);
+                final UpdateResults resultsFirstname = Main.datastore.update(query, updateOperationsFirstname);
+            }
+
+            if(!lastName.isEmpty())
+            {
+                final UpdateOperations<Student> updateOperationsLastname = Main.datastore.createUpdateOperations(Student.class).set("lastName", lastName);
+                final UpdateResults resultsLastname = Main.datastore.update(query, updateOperationsLastname);
+            }
+            if(!bornDate.isEmpty())
+            {
+                final UpdateOperations<Student> updateOperationsBornDate = Main.datastore.createUpdateOperations(Student.class).set("bornDate", lastName);
+                final UpdateResults resultsBornDate = Main.datastore.update(query, updateOperationsBornDate);
+            }
+
             return Response.status(200).build();
         }
         return Response.status(404).build();
     }
-
+/*
     @PUT
     @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/student/nazwisko")
+    @Path("update/student/nazwisko")
     public Response putStudentNazwisko(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("nazwisko") String nazwisko)
     {
         if(id != "") {
@@ -309,7 +330,6 @@ public class request
         }
         return Response.status(404).build();
     }
-
     @PUT
     @Consumes({"application/xml", "application/json"})
     @Path("aktualizuj/student/data")
@@ -324,31 +344,63 @@ public class request
         }
         return Response.status(404).build();
     }
+*/
 
     @PUT
     @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/przedmiot/nazwa")
-    public Response putPrzedmiotNazwa(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("nazwa") String nazwa)
+    @Path("update/subject")
+    public Response putSubject(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname)
     {
-        if(id != "") {
-            final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+        if(!id.isEmpty()) {
+            final Query<Subject> query = Main.datastore.createQuery(Subject.class);
             query.field("id").equal(id);
-            final UpdateOperations<Przedmiot> updateOperations = Main.datastore.createUpdateOperations(Przedmiot.class).set("nazwa", nazwa);
-            final UpdateResults results = Main.datastore.update(query, updateOperations);
+            if(subjectName != "")
+            {
+                final UpdateOperations<Subject> updateOperations = Main.datastore.createUpdateOperations(Subject.class).set("subjectName", subjectName);
+                final UpdateResults results = Main.datastore.update(query, updateOperations);
+            }
+
+            if(!teacherFirstname.isEmpty())
+            {
+                final UpdateOperations<Subject> updateOperationsTeacherFirstname = Main.datastore.createUpdateOperations(Subject.class).set("teacherFirstname", teacherFirstname);
+                final UpdateResults resultsTeacherFirstname = Main.datastore.update(query, updateOperationsTeacherFirstname);
+            }
+
+            if(!teacherLastname.isEmpty())
+            {
+                final UpdateOperations<Subject> updateOperationsTeacherLastname = Main.datastore.createUpdateOperations(Subject.class).set("teacherLastname", teacherLastname);
+                final UpdateResults resultsTeacherLastname = Main.datastore.update(query, updateOperationsTeacherLastname);
+            }
+
             return Response.status(200).build();
         }
         return Response.status(404).build();
     }
-
+/*
     @PUT
     @Consumes({"application/xml", "application/json"})
     @Path("aktualizuj/przedmiot/prowadzacy")
     public Response putPrzedmiotProwadzacy(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("idProwadzacego") String idProwadzacego)
     {
         if(id != "") {
-            final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
+            final Query<Subject> query = Main.datastore.createQuery(Subject.class);
             query.field("id").equal(id);
-            final UpdateOperations<Przedmiot> updateOperations = Main.datastore.createUpdateOperations(Przedmiot.class).set("idProwadzacego", Long.parseLong(idProwadzacego, 10));
+            final UpdateOperations<Subject> updateOperations = Main.datastore.createUpdateOperations(Subject.class).set("idProwadzacego", Long.parseLong(idProwadzacego, 10));
+            final UpdateResults results = Main.datastore.update(query, updateOperations);
+            return Response.status(200).build();
+        }
+        return Response.status(404).build();
+    }
+*/
+    @PUT
+    @Consumes({"application/xml", "application/json"})
+    @Path("update/grade")
+    public Response putSubjectGrade(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("gradeValue") String gradeValue)
+    {
+        if(!id.isEmpty()) {
+            final Query<Grade> query = Main.datastore.createQuery(Grade.class);
+            query.field("id").equal(id);
+            final UpdateOperations<Grade> updateOperations = Main.datastore.createUpdateOperations(Grade.class).set("gradeValue", gradeValue);
             final UpdateResults results = Main.datastore.update(query, updateOperations);
             return Response.status(200).build();
         }
@@ -357,30 +409,15 @@ public class request
 
     @PUT
     @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/ocena")
-    public Response putPrzedmiotOcena(@DefaultValue("") @QueryParam("id") String id, @DefaultValue("") @QueryParam("ocena") String ocena)
+    @Path("update/subject/student")
+    public Response putSubjectStudent(@DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("") @QueryParam("index") String index)
     {
-        if(id != "") {
-            final Query<Ocena> query = Main.datastore.createQuery(Ocena.class);
-            query.field("id").equal(id);
-            final UpdateOperations<Ocena> updateOperations = Main.datastore.createUpdateOperations(Ocena.class).set("ocena", ocena);
-            final UpdateResults results = Main.datastore.update(query, updateOperations);
-            return Response.status(200).build();
-        }
-        return Response.status(404).build();
-    }
-
-    @PUT
-    @Consumes({"application/xml", "application/json"})
-    @Path("aktualizuj/przedmiot/student")
-    public Response putPrzedmiotStudent(@DefaultValue("") @QueryParam("nazwa") String nazwa, @DefaultValue("") @QueryParam("indeks") String indeks)
-    {
-        if(nazwa != "") {
-            final Query<Przedmiot> query = Main.datastore.createQuery(Przedmiot.class);
-            query.field("nazwa").equal(nazwa);
+        if(!subjectName.isEmpty()) {
+            final Query<Subject> query = Main.datastore.createQuery(Subject.class);
+            query.field("subjectName").equal(subjectName);
             final Query<Student> query2 = Main.datastore.createQuery(Student.class);
-            query2.field("index").equal(indeks);
-            final UpdateOperations<Przedmiot> updateOperations = Main.datastore.createUpdateOperations(Przedmiot.class).add("student" ,query2.get());
+            query2.field("index").equal(index);
+            final UpdateOperations<Subject> updateOperations = Main.datastore.createUpdateOperations(Subject.class).add("student" ,query2.get());
             final UpdateResults results = Main.datastore.update(query, updateOperations);
             return Response.status(200).build();
         }

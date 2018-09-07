@@ -1,7 +1,7 @@
 package Main;
 
-import ModelDanych.Ocena;
-import ModelDanych.Przedmiot;
+import ModelDanych.Grade;
+import ModelDanych.Subject;
 import ModelDanych.Student;
 import com.mongodb.MongoClient;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -33,8 +33,8 @@ public class Main
         // tell Morphia where to find your classes
         // can be called multiple times with different packages or classes
         morphia.map(Student.class);
-        morphia.map(Przedmiot.class);
-        morphia.map(Ocena.class);
+        morphia.map(Subject.class);
+        morphia.map(Grade.class);
 
         MongoClient mongoClient = new MongoClient( "localhost" , 8004 );
 
@@ -42,27 +42,30 @@ public class Main
         datastore = morphia.createDatastore(mongoClient, "morphia_example");
         datastore.ensureIndexes();
 
-        List<Student> studenty = new ArrayList<Student>();;
-        List<Ocena> oceny = new ArrayList<Ocena>();;
-        Map<String, Przedmiot> przedmioty = new HashMap<String, Przedmiot>();;
+        List<Student> studentsArray = new ArrayList<Student>();;
+        List<Grade> gradesArray = new ArrayList<Grade>();;
 
-        studenty.add(new Student(123456789L,"Jan","Sobieski",new Date()));
-        studenty.add(new Student(432156789L,"Jan","Nowak",new Date()));
-        studenty.add(new Student(987656789L,"Zbyszko","Bogdaniec",new Date()));
-
-
-        oceny.add(new Ocena(4.5, new Date(), studenty.get(0)));
-        oceny.add(new Ocena(4.0, new Date(), studenty.get(0)));
-        oceny.add(new Ocena(2.0, new Date(), studenty.get(1)));
-        oceny.add(new Ocena(3.0, new Date(), studenty.get(1)));
-        oceny.add(new Ocena(3.5, new Date(), studenty.get(2)));
-        oceny.add(new Ocena(5.0, new Date(), studenty.get(2)));
+        studentsArray.add(new Student(123456789L,"Jan","Sobieski",new Date()));
+        studentsArray.add(new Student(432156789L,"Jan","Nowak",new Date()));
+        studentsArray.add(new Student(987656789L,"Zbyszko","Bogdaniec",new Date()));
 
 
-        datastore.save(studenty);
-        datastore.save(oceny);
-        datastore.save(new Przedmiot("Przyroda", 9L, oceny, new Date(), studenty));
-        datastore.save(new Przedmiot("Matematyka", 9L, oceny, new Date(), studenty));
+        gradesArray.add(new Grade(4.5, new Date(), studentsArray.get(0)));
+        gradesArray.add(new Grade(4.0, new Date(), studentsArray.get(0)));
+        gradesArray.add(new Grade(2.0, new Date(), studentsArray.get(1)));
+        gradesArray.add(new Grade(3.0, new Date(), studentsArray.get(1)));
+        gradesArray.add(new Grade(3.5, new Date(), studentsArray.get(2)));
+        gradesArray.add(new Grade(5.0, new Date(), studentsArray.get(2)));
+
+        List<Subject> subjectsArray = new ArrayList<Subject>();
+        subjectsArray.add(new Subject("Fizyka", "Marek", "Mareczko", gradesArray, studentsArray));
+        subjectsArray.add(new Subject("Angielski", "Krystian", "Karczynski", gradesArray, studentsArray));
+
+        datastore.save(studentsArray);
+        datastore.save(gradesArray);
+        datastore.save(subjectsArray);
+        //datastore.save(new Subject("Przyroda", "Marek", "Mareczko", gradesArray, studentsArray));
+       // datastore.save(new Subject("Matematyka", "Krystian", "Karczynski", gradesArray, studentsArray));
 
     }
 }

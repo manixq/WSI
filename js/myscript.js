@@ -12,8 +12,14 @@ function StudentList(data)
 var Studenci = [];
 
 var Student = function(data) {
-    this.imie = ko.observable(data.imie);
-    this.nazwisko = ko.observable(data.nazwisko);
+    this.index = ko.observable(data.index);
+    this.firstName = ko.observable(data.firstName);
+    this.lastName = ko.observable(data.lastName);
+    this.bornDate = ko.observable(data.bornDate);
+ }
+
+var Subject = function(data) {
+    this.subjectName = ko.observable(data.subjectName);
  }
 
 $('#btnGetStudents').click(function() {
@@ -21,9 +27,49 @@ $('#btnGetStudents').click(function() {
 	return false;
 });
 
-function findStudents() {
+var ViewModelMapping = {
+   'gradesList':{
+       key: function(data){
+           return ko.utils.unwrapObservable(data.id);
+       }
+   },
+    
+   'studentsList':{
+       key: function(data){
+           return ko.utils.unwrapObservable(data.id);
+       }
+   }
+}
+var Subjects = ko.observableArray([]);
+function LoadViewModel()
+{
+	console.log('LoadViewModel');
+	$.ajax({
+		headers: { 
+			"Content-Type": "application/json",
+			"Accept": "application/json",
+		},
+		type: 'GET',
+		url: rootURL + 'subject',
+		crossDomain: true,
+		dataType: 'json',
+		success: function(data) 
+        {           
+            self.Subjects = ko.mapping.fromJS(data, ViewModelMapping);
+            console.log(data);
+            console.log(self.Subjects());     
+            
+            ko.applyBindings(self.Subjects);  
+		},        
+        error: function(jqxhr, status, errorMsg) 
+        {
+			alert('Failed! ' + errorMsg);
+		}
+	});
+}
 
-    self.customerList = ko.observableArray();
+function findStudents() 
+{
 	console.log('findStudents');
 	$.ajax({
 		headers: { 
@@ -42,11 +88,11 @@ function findStudents() {
             //students.push(new Student(item));
         //});
            // self.neuelist = new StudentList(data);
-            //console.log(students);
+            
             console.log(data);
+            console.log(self.students);
             console.log(self.students());
-            //var x = new StudentList(data);
-            ko.applyBindings(self.students);            
+            //var x = new StudentList(data);          
 		},
         
         error: function(jqxhr, status, errorMsg) {
@@ -54,5 +100,5 @@ function findStudents() {
 		}
 	});
 }
-
+new LoadViewModel();
 (new findStudents());

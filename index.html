@@ -28,31 +28,33 @@
             <div class="table">  
                 <div class="row">
                     <div class ="cell">
-                        <select name="text">
-                            <option value="Przyroda">Przyroda</option> 
-                            <option value="Matematyka">Matematyka</option>
-                            <option value="Fizyka">Fizyka</option>
+                        <select name="text">      
+                            
+                            <!-- ko foreach: Subjects -->
+                            <option value="Przyroda" data-bind="text: subjectName"></option>                             
+                            <!-- /ko -->   
+                            
                         </select>
                     </div>
                     <div class ="cell">
-                        <Button id=SeeGrades>Go!</Button>
+                        <a href="#ManageSeeGrades"><Button id="SeeGrades">Go!</Button></a>
                     </div>
                 </div>
             </div>             
         </div>
         <div class="container" id="ManageStudents">
             <h1>List of Students</h1>
-            <form id="GETstudents" action="http://localhost:8080/student" method="get">
+            <form id="GETstudents" action="http://localhost:8080/studentsList" method="get">
                 <div class="table" >                       
                     <div class="row">
                         <div class ="cell">
-                          <input placeholder="Index" id="GET-index" type="text" name="imie">
+                          <input placeholder="Index" id="GET-index" type="text" name="firstName">
                         </div>
                         <div class ="cell">
-                          <input placeholder="First Name" id="GET-imie" type="text" name="imie">
+                          <input placeholder="First Name" id="GET-firstName" type="text" name="firstName">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Last Name" id="GET-nazwisko" type="text" name="nazwisko">
+                          <input placeholder="Last Name" id="GET-lastName" type="text" name="lastName">
                         </div>
                         <div class ="cell">
                           <input placeholder="Born Date" id="GET-born_date" type="text" name="date">
@@ -66,13 +68,13 @@
                             <div class ="cell" data-bind="text: index">
                               12312312
                             </div>
-                           <div class ="cell" data-bind="text: imie">
+                           <div class ="cell" data-bind="text: firstName">
                               Marek
                             </div>
-                            <div class ="cell" data-bind="text: nazwisko">
+                            <div class ="cell" data-bind="text: lastName">
                               Antoniusz
                             </div>
-                             <div class ="cell" data-bind="text: data">
+                             <div class ="cell" data-bind="text: bornDate">
                               14-01-83
                             </div>
                             <div class ="cell noprint">
