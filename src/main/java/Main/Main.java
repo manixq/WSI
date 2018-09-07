@@ -20,11 +20,11 @@ public class Main
     public static void main(String[] strs) {
 
 
-
+        CustomHeaders customHeaders = new CustomHeaders();
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(8080).build();
         ResourceConfig config = new ResourceConfig(request.class);
         config.register(new DateParamConverterProvider("yyyy-MM-dd"));
-        config.register(new CustomHeaders());
+        config.register(customHeaders);
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
 
 

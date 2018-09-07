@@ -9,11 +9,12 @@
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type='text/javascript' src="js/knockout.js"></script>
         <script type='text/javascript' src="js/knockout.mapping-latest.js"></script>
-        <script type='text/javascript' src="js/myscript.js"></script>
 
     </head>
     
     <body>
+        
+        <script type='text/javascript' src="js/myscript.js"></script>
         
         <img src="screenshots/quick-edit.png" alt=":(">
         <div id="mainContainer">
@@ -42,7 +43,7 @@
         <div class="container" id="ManageStudents">
             <h1>List of Students</h1>
             <form id="GETstudents" action="http://localhost:8080/student" method="get">
-                <div class="table">                       
+                <div class="table" >                       
                     <div class="row">
                         <div class ="cell">
                           <input placeholder="Index" id="GET-index" type="text" name="imie">
@@ -60,44 +61,26 @@
                         Action
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class ="cell">
-                          12312312
+                    <!-- ko foreach: students -->
+                        <div class="row">
+                            <div class ="cell" data-bind="text: index">
+                              12312312
+                            </div>
+                           <div class ="cell" data-bind="text: imie">
+                              Marek
+                            </div>
+                            <div class ="cell" data-bind="text: nazwisko">
+                              Antoniusz
+                            </div>
+                             <div class ="cell" data-bind="text: data">
+                              14-01-83
+                            </div>
+                            <div class ="cell noprint">
+                                <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
+                                <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                            </div>
                         </div>
-                       <div class ="cell">
-                          Marek
-                        </div>
-                        <div class ="cell">
-                          Antoniusz
-                        </div>
-                         <div class ="cell">
-                          14-01-83
-                        </div>
-                        <div class ="cell noprint">
-                            <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
-                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class ="cell">
-                          54353433
-                        </div>
-                       <div class ="cell">
-                          Juliusz
-                        </div>
-                        <div class ="cell">
-                          Cezar
-                        </div>
-                         <div class ="cell">
-                          13-07-02
-                        </div>
-                        <div class ="cell noprint">
-                            <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
-                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
-                        </div>
-
-                    </div>
+                    <!-- /ko -->                  
                 </div>
             </form>  
         </div>
@@ -158,9 +141,6 @@
         <br>
         <br>
         
-        <h1 data-bind="foreach:UsersList">
-        <div data-bind="text:imie"></div>
-        </h1>
         
         
         <footer>
@@ -169,6 +149,7 @@
             <li><a href="https://elogin.put.poznan.pl">eLogin</a></li>
             <li><a href="https://fc.put.poznan.pl">Wydział Informatyki</a></li>
         </ul>
+                        
         <p id="foot">created by Pawel Mania</p>
     </footer>
     </body>

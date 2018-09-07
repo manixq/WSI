@@ -21,35 +21,11 @@ import java.util.*;
 @Path("/")
 public class request
 {
-
-    //static List<Student> studenty = new ArrayList<Student>();;
-    //static List<Ocena> oceny = new ArrayList<Ocena>();;
-   // static Map<String, Przedmiot> przedmioty = new HashMap<String, Przedmiot>();;
-//users/query?from=100&to=200&orderBy=age&orderBy=name
     public request()
     {
 
-
-
-        //studenty.add(new Student(123456789L,"Jan","Sobieski",new Date()));
-       // studenty.add(new Student(432156789L,"Jan","Nowak",new Date()));
-       // studenty.add(new Student(987656789L,"Zbyszko","Bogdaniec",new Date()));
-
-
-        //oceny.add(new Ocena(4.5, new Date(), studenty.get(0)));
-       // oceny.add(new Ocena(4.0, new Date(), studenty.get(0)));
-       // oceny.add(new Ocena(2.0, new Date(), studenty.get(1)));
-      //  oceny.add(new Ocena(3.0, new Date(), studenty.get(1)));
-       // oceny.add(new Ocena(3.5, new Date(), studenty.get(2)));
-       // oceny.add(new Ocena(5.0, new Date(), studenty.get(2)));
-
-      //  przedmioty.put("przyroda", new Przedmiot("Przyroda", 9L, oceny, new Date(), studenty));
-       // przedmioty.put("matematyka", new Przedmiot("Matematyka", 9L, oceny, new Date(), studenty));
     }
 
-
-    //@Path("/{studentId}")
-    //@Produces(MediaType.APPLICATION_XML)
     @GET
     @Path("/student")
     @Produces({"application/xml", "application/json"})

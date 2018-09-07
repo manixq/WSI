@@ -1,12 +1,20 @@
 "use strict";
 
 var rootURL = "http://localhost:8080/";
+function StudentList(data)
+{
+    var self = this;
+    
+}
 
+//var students = [];
 
-var myObservableArray = ko.observableArray();
-var UsersList = ko.observableArray([]);
-//var viewModel = ko.mapping.fromJSON(data);
+var Studenci = [];
 
+var Student = function(data) {
+    this.imie = ko.observable(data.imie);
+    this.nazwisko = ko.observable(data.nazwisko);
+ }
 
 $('#btnGetStudents').click(function() {
 	findStudents().val();
@@ -14,6 +22,8 @@ $('#btnGetStudents').click(function() {
 });
 
 function findStudents() {
+
+    self.customerList = ko.observableArray();
 	console.log('findStudents');
 	$.ajax({
 		headers: { 
@@ -24,17 +34,25 @@ function findStudents() {
 		url: rootURL + 'student',
 		crossDomain: true,
 		dataType: 'json',
-		success: function() { alert("Success"); },
+		success: function(data) { 
+            
+        self.students = ko.observableArray(data);
+           //ko.mapping.fromJS(data, self.students);
+            //ko.utils.arrayForEach(data, function(item) {
+            //students.push(new Student(item));
+        //});
+           // self.neuelist = new StudentList(data);
+            //console.log(students);
+            console.log(data);
+            console.log(self.students());
+            //var x = new StudentList(data);
+            ko.applyBindings(self.students);            
+		},
+        
         error: function(jqxhr, status, errorMsg) {
-			alert('Failed! ' + errorMsg + status);
+			alert('Failed! ' + errorMsg);
 		}
 	});
 }
 
-function UserDetailViewModel(data){
-	var self = this;
-   self.imie= ko.observable(data.imie);
-}
-
-
-ko.applyBindings(new findStudents());
+(new findStudents());
