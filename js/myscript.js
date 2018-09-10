@@ -1,31 +1,8 @@
 "use strict";
 
+/* global ko, $, document, self, alert */
+
 var rootURL = "http://localhost:8080/";
-function StudentList(data)
-{
-    var self = this;
-    
-}
-
-//var students = [];
-
-var Studenci = [];
-
-var Student = function(data) {
-    this.index = ko.observable(data.index);
-    this.firstName = ko.observable(data.firstName);
-    this.lastName = ko.observable(data.lastName);
-    this.bornDate = ko.observable(data.bornDate);
- }
-
-var Subject = function(data) {
-    this.subjectName = ko.observable(data.subjectName);
- }
-
-$('#btnGetStudents').click(function() {
-	findStudents().val();
-	return false;
-});
 
 var ViewModelMapping = {
    'gradesList':{
@@ -40,65 +17,113 @@ var ViewModelMapping = {
        }
    }
 }
-var Subjects = ko.observableArray([]);
-function LoadViewModel()
-{
-	console.log('LoadViewModel');
-	$.ajax({
-		headers: { 
-			"Content-Type": "application/json",
-			"Accept": "application/json",
-		},
-		type: 'GET',
-		url: rootURL + 'subject',
-		crossDomain: true,
-		dataType: 'json',
-		success: function(data) 
-        {           
-            self.Subjects = ko.mapping.fromJS(data, ViewModelMapping);
-            console.log(data);
-            console.log(self.Subjects());     
-            
-            ko.applyBindings(self.Subjects);  
-		},        
-        error: function(jqxhr, status, errorMsg) 
-        {
-			alert('Failed! ' + errorMsg);
-		}
-	});
-}
 
-function findStudents() 
+
+
+
+
+var InitViewModel = function()
 {
-	console.log('findStudents');
-	$.ajax({
-		headers: { 
-			"Content-Type": "application/json",
-			"Accept": "application/json",
-		},
-		type: 'GET',
-		url: rootURL + 'student',
-		crossDomain: true,
-		dataType: 'json',
-		success: function(data) { 
-            
-        self.students = ko.observableArray(data);
-           //ko.mapping.fromJS(data, self.students);
-            //ko.utils.arrayForEach(data, function(item) {
-            //students.push(new Student(item));
-        //});
-           // self.neuelist = new StudentList(data);
-            
-            console.log(data);
-            console.log(self.students);
-            console.log(self.students());
-            //var x = new StudentList(data);          
-		},
+    $( document ).ready(function() {
+        $.ajax({
+            headers: { 
+                //"Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            type: 'GET',
+            url: rootURL + 'student',
+            crossDomain: true,
+            dataType: 'json',
+            success: function(data) { 
+
+            self.students = ko.observableArray(data);
+            console.log(self.students());   
+            //ko.applyBindings(self.students);
+            },
+
+            error: function(jqxhr, status, errorMsg) {
+                alert('Failed! ' + errorMsg);
+            }
+        });
+
+        $.ajax({
+            headers: { 
+                //"Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            type: 'GET',
+            url: rootURL + 'subject',
+            crossDomain: true,
+            dataType: 'json',
+            success: function(data) 
+            {           
+                self.Subjects = ko.mapping.fromJS(data, ViewModelMapping);
+                console.log(self.Subjects());     
+
+                ko.applyBindings(self.Subjects); 
+            },        
+            error: function(jqxhr, status, errorMsg) 
+            {
+                alert('Failed! ' + errorMsg);
+            }
+        });
+    });
+    
+    self.selectedSubject = ko.observable();
+    self.selectedSubject.subscribe(function(selectedSubjectName)    
+    {      
+        self.filteredGrades = ko.toJS(ko.computed(function()
+        {
+            if(self.Subjects)//!self.selectedSubject())   
+            {                
+                self.allGrades = ko.observableArray();  
+                ko.utils.arrayForEach(self.Subjects(), function(subject) 
+                {
+                    self.allGrades.push.apply(self.allGrades, subject.gradesList());
+                });
+
+                return allGrades;
+            }
+        }));
         
-        error: function(jqxhr, status, errorMsg) {
-			alert('Failed! ' + errorMsg);
-		}
-	});
+        console.log(self.filteredGrades);
+        
+     });
+    
+    
+    
+    
+    self.selectedSubjectGrades = ko.observableArray();
+    //self.selectedSubject = ko.observable($('#SelectSubjectToGetGrades'));
 }
-new LoadViewModel();
-(new findStudents());
+/*$(document).ready(function(){
+    $('#SelectSubjectToGetGrades').change(function()
+    {
+        console.log(ko.toJS(self.selectedSubject.subjectName));
+        $.ajax({
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                type: 'GET',
+                url: rootURL + 'subject/'+ko.toJS(self.selectedSubject).subjectName+'/grades',
+                crossDomain: true,
+                dataType: 'json',
+                success: function(data) 
+                {           
+                    ko.observableArray(data, self.selectedSubjectGrades);
+                    console.log(self.selectedSubjectGrades());    
+
+                },        
+                error: function(jqxhr, status, errorMsg) 
+                {
+                    alert('Failed! ' + errorMsg);
+                }
+            });
+
+        console.log("clicked");   
+    });
+});*/
+
+
+new InitViewModel();

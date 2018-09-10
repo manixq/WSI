@@ -42,8 +42,10 @@ public class Main
         datastore = morphia.createDatastore(mongoClient, "morphia_example");
         datastore.ensureIndexes();
 
-        List<Student> studentsArray = new ArrayList<Student>();;
-        List<Grade> gradesArray = new ArrayList<Grade>();;
+        List<Student> studentsArray = new ArrayList<Student>();
+        List<Grade> gradesArray = new ArrayList<Grade>();
+        List<Grade> gradesArray2 = new ArrayList<Grade>();
+        List<Grade> gradesArray3 = new ArrayList<Grade>();
 
         studentsArray.add(new Student(123456789L,"Jan","Sobieski",new Date()));
         studentsArray.add(new Student(432156789L,"Jan","Nowak",new Date()));
@@ -51,15 +53,9 @@ public class Main
 
 
         gradesArray.add(new Grade(4.5, new Date(), studentsArray.get(0)));
-        gradesArray.add(new Grade(4.0, new Date(), studentsArray.get(0)));
-        gradesArray.add(new Grade(2.0, new Date(), studentsArray.get(1)));
-        gradesArray.add(new Grade(3.0, new Date(), studentsArray.get(1)));
-        gradesArray.add(new Grade(3.5, new Date(), studentsArray.get(2)));
-        gradesArray.add(new Grade(5.0, new Date(), studentsArray.get(2)));
 
         List<Subject> subjectsArray = new ArrayList<Subject>();
         subjectsArray.add(new Subject("Fizyka", "Marek", "Mareczko", gradesArray, studentsArray));
-        subjectsArray.add(new Subject("Angielski", "Krystian", "Karczynski", gradesArray, studentsArray));
 
         datastore.save(studentsArray);
         datastore.save(gradesArray);

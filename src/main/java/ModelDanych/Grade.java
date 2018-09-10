@@ -41,6 +41,7 @@ public class Grade implements Serializable
         return gradeValue;
     }
 
+
     public void setGradeValue(float gradeValue) {
         this.gradeValue = Math.round(gradeValue * 2) / 2.0;
     }
