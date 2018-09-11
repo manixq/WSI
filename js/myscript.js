@@ -22,8 +22,12 @@ var ViewModelMapping = {
 
 
 
+
 var InitViewModel = function()
 {
+    self.gradeStudentFilter = ko.observable();
+    self.selectedSubject = ko.observable(); 
+    
     $( document ).ready(function() {
         $.ajax({
             headers: { 
@@ -36,9 +40,7 @@ var InitViewModel = function()
             dataType: 'json',
             success: function(data) { 
 
-            self.students = ko.observableArray(data);
-            console.log(self.students());   
-            //ko.applyBindings(self.students);
+            self.students = ko.observableArray(data);     
             },
 
             error: function(jqxhr, status, errorMsg) {
@@ -58,8 +60,7 @@ var InitViewModel = function()
             success: function(data) 
             {           
                 self.Subjects = ko.mapping.fromJS(data, ViewModelMapping);
-                console.log(self.Subjects());     
-
+                
                 ko.applyBindings(self.Subjects); 
             },        
             error: function(jqxhr, status, errorMsg) 
@@ -69,14 +70,46 @@ var InitViewModel = function()
         });
     });
     
-    self.selectedSubject = ko.observable();
-    self.selectedSubject.subscribe(function(selectedSubjectName)    
+     
+    
+    
+    self.filterGrades = ko.computed(function() 
+    {        
+        if(self.selectedSubject())
+        {
+            console.log("there is selected subject");
+            if(!self.gradeStudentFilter()) 
+            {
+                console.log("no student filter");
+                                
+                return self.selectedSubject().gradesList; 
+            } 
+            else 
+            {
+                
+                console.log("there is student filter");
+                return ko.utils.arrayFilter(self.selectedSubject().gradesList(), function(grade) 
+                {             
+                console.log(grade);       
+                    return grade.referencedStudent.index() == self.gradeStudentFilter();
+                });
+            }
+        }        
+    });
+    
+    self.filter = function (student) {
+        
+        console.log(student);
+        self.gradeStudentFilter(student.index);
+    }
+    
+  /*  self.selectedSubject.subscribe(function(selectedSubject)   
     {      
         self.filteredGrades = ko.toJS(ko.computed(function()
         {
-            if(self.Subjects)//!self.selectedSubject())   
-            {                
-                self.allGrades = ko.observableArray();  
+            self.allGrades = ko.observableArray(); 
+            if(!self.selectedSubject())   
+            {                 
                 ko.utils.arrayForEach(self.Subjects(), function(subject) 
                 {
                     self.allGrades.push.apply(self.allGrades, subject.gradesList());
@@ -84,46 +117,19 @@ var InitViewModel = function()
 
                 return allGrades;
             }
+                       
+            return self.selectedSubject().gradesList();
         }));
-        
-        console.log(self.filteredGrades);
-        
-     });
+     });*/
     
     
     
     
-    self.selectedSubjectGrades = ko.observableArray();
+    //self.selectedSubjectGrades = ko.observableArray();
     //self.selectedSubject = ko.observable($('#SelectSubjectToGetGrades'));
 }
-/*$(document).ready(function(){
-    $('#SelectSubjectToGetGrades').change(function()
-    {
-        console.log(ko.toJS(self.selectedSubject.subjectName));
-        $.ajax({
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                type: 'GET',
-                url: rootURL + 'subject/'+ko.toJS(self.selectedSubject).subjectName+'/grades',
-                crossDomain: true,
-                dataType: 'json',
-                success: function(data) 
-                {           
-                    ko.observableArray(data, self.selectedSubjectGrades);
-                    console.log(self.selectedSubjectGrades());    
 
-                },        
-                error: function(jqxhr, status, errorMsg) 
-                {
-                    alert('Failed! ' + errorMsg);
-                }
-            });
 
-        console.log("clicked");   
-    });
-});*/
 
 
 new InitViewModel();

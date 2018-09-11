@@ -65,8 +65,8 @@
                               14-01-83
                             </div>
                             <div class ="cell noprint">
-                                <a href="#ManageSeeGrades"><Button type="button" id=SeeGrades>See grades</Button></a>
-                                <Sa href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                                <Button type="button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filter($data) }" id="SeeGrades" >See grades</Button>
+                                <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
                             </div>
                         </div>
                     <!-- /ko --> 
@@ -80,7 +80,7 @@
                     <div class="row row--4cols">
                         <div class ="cell">
                             
-                        <select id="SelectSubjectToGetGrades" name="text" data-bind="options: Subjects, optionsText: 'subjectName', value: selectedSubject, valueUpdate: 'input'">  
+                        <select id="SelectSubjectToGetGrades" name="text" data-bind="options: Subjects, optionsText: 'subjectName', optionsCaption: 'Wybierz', value: selectedSubject, valueUpdate: 'input'">  
                         </select>
                             
                     </div>
@@ -95,9 +95,9 @@
                         </div>
                     </div>
                     
-                    <!-- ko foreach: filteredGrades -->
+                    <!-- ko foreach: self.filterGrades() -->
                     <div class="row row--4cols">
-                        <div class ="cell">
+                        <div class ="cell" data-bind="text: self.selectedSubject().subjectName">
                           Matematyka
                         </div>
                        <div class ="cell" data-bind="text: gradeValue">

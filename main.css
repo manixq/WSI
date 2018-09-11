@@ -71,15 +71,14 @@ nav {
     height: 100%;   
     margin: 0px;  /*removes default style*/
     display: flex;  /*enables flex content for its children*/
-    box-sizing: border-box;
+    
 }
 .container{
     
     margin-left: auto;
     margin-right: auto;
-    display:flex;
-    flex-direction: column;
-    border-collapse: collapse;
+    display:table;
+    width: 100%;
     
 }
 #column_container{

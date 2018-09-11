@@ -53,12 +53,21 @@ public class Main
 
 
         gradesArray.add(new Grade(4.5, new Date(), studentsArray.get(0)));
+        gradesArray2.add(new Grade(3.5, new Date(), studentsArray.get(1)));
+        gradesArray3.add(new Grade(3.0, new Date(), studentsArray.get(2)));
+        gradesArray.add(new Grade(2.0, new Date(), studentsArray.get(0)));
+        gradesArray2.add(new Grade(5.0, new Date(), studentsArray.get(1)));
+        gradesArray3.add(new Grade(4.0, new Date(), studentsArray.get(2)));
 
         List<Subject> subjectsArray = new ArrayList<Subject>();
         subjectsArray.add(new Subject("Fizyka", "Marek", "Mareczko", gradesArray, studentsArray));
+        subjectsArray.add(new Subject("Matematyka", "Krystian", "Karczynski", gradesArray2, studentsArray));
+        subjectsArray.add(new Subject("Przyroda", "Mike", "Tyson", gradesArray3, studentsArray));
 
         datastore.save(studentsArray);
         datastore.save(gradesArray);
+        datastore.save(gradesArray2);
+        datastore.save(gradesArray3);
         datastore.save(subjectsArray);
         //datastore.save(new Subject("Przyroda", "Marek", "Mareczko", gradesArray, studentsArray));
        // datastore.save(new Subject("Matematyka", "Krystian", "Karczynski", gradesArray, studentsArray));
