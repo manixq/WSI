@@ -26,28 +26,56 @@
         <div class="container" id="ManageCourses">                
             <h1>List of Courses</h1>
             
-            <!-- TODO -->
+            <form id="GETstudents" Actions="http://localhost:8080/studentsList" method="get">                     
+                    <div class="row row--3cols">
+                        <div class ="cell">
+                          <input type="search" placeholder="Subject" id="GET-index" type="text" name="firstName">
+                            
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Teacher" id="GET-firstName" type="text" name="firstName">
+                        </div>                   
+                        <div class ="cell noprint">
+                        Actions
+                        </div>
+                    </div>
+                    <!-- ko foreach: Subjects -->
+                        <div class="row row--3cols" >
+                            <div class ="cell" data-bind="text: subjectName">
+                              przyra
+                            </div>
+                           <div class ="cell" data-bind="text: teacherFullname">
+                              Marek
+                            </div>                   
+                            <div class ="cell noprint">
+                                <Button class = "small_button" onclick="location.href = '#ManageSeeAllGrades'" data-bind="click: function() { filter($data) }" id="SeeGrades" >Grades</Button>
+                                <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
+                            </div>
+                        </div>
+                    <!-- /ko --> 
+                
+            </form>  
             
         </div>
         <div class="container" id="ManageStudents">
             <h1>List of Students</h1>
-            <form id="GETstudents" action="http://localhost:8080/studentsList" method="get">                     
+            <form id="GETstudents" Actions="http://localhost:8080/studentsList" method="get">                     
                     <div class="row row--5cols">
                         <div class ="cell">
                           <input type="search" placeholder="Index" id="GET-index" type="text" name="firstName">
                             
                         </div>
                         <div class ="cell">
-                          <input placeholder="First Name" id="GET-firstName" type="text" name="firstName">
+                          <input placeholder="First name" id="GET-firstName" type="text" name="firstName">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Last Name" id="GET-lastName" type="text" name="lastName">
+                          <input placeholder="Last name" id="GET-lastName" type="text" name="lastName">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Born Date" id="GET-born_date" type="text" name="date">
+                          <input placeholder="Born date" id="GET-born_date" type="text" name="date">
                         </div>
                         <div class ="cell noprint">
-                        Action
+                        Actions
                         </div>
                     </div>
                     <!-- ko foreach: students -->
@@ -65,8 +93,8 @@
                               14-01-83
                             </div>
                             <div class ="cell noprint">
-                                <Button type="button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filter($data) }" id="SeeGrades" >See grades</Button>
-                                <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                                <Button class = "small_button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filter($data) }" id="SeeGrades" >Grades</Button>
+                                <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
                             </div>
                         </div>
                     <!-- /ko --> 
@@ -75,12 +103,12 @@
         </div>
         <div class="container" id="ManageSeeGrades">
             <h1>List of Grades</h1>
-            <form id="GetGrades" action="http://localhost:8080/Oceny" method="get">
+            <form id="GetGrades" Actions="http://localhost:8080/Oceny" method="get">
                 
                     <div class="row row--4cols">
                         <div class ="cell">
                             
-                        <select id="SelectSubjectToGetGrades" name="text" data-bind="options: Subjects, optionsText: 'subjectName', optionsCaption: 'Wybierz', value: selectedSubject, valueUpdate: 'input'">  
+                        <select class="selectBox" id="SelectSubjectToGetGrades" name="text" data-bind="options: Subjects, optionsText: 'subjectName', optionsCaption: 'Wybierz', value: selectedSubject, valueUpdate: 'input'">  
                         </select>
                             
                     </div>
@@ -91,7 +119,7 @@
                           <input placeholder="Date" id="GET-grade-date" type="text" name="grade_date">
                         </div>
                         <div class ="cell noprint">
-                        Action
+                        Actions
                         </div>
                     </div>
                     
@@ -107,13 +135,61 @@
                           24-03-70
                         </div>
                         <div class ="cell noprint">
-                            <a href="#Change"><Button type="button" id=Change>Change</Button></a>
-                            <a href="#Delete"><Button type="button" id=Delete>Delete</Button></a>
+                            <Button class = "small_button" onclick="location.href = '#Change'">Change</Button>
+                            <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
                         </div>
                     </div>
                      <!-- /ko --> 
                      
                
+            </form>  
+        </div>
+            
+            <div class="container" id="ManageSeeAllGrades">
+            <h1>List of Grades</h1>
+            <form id="GetGrades" Actions="http://localhost:8080/Oceny" method="get">
+                
+                    <div class="row row--6cols">
+                       <div class ="cell">
+                          <input placeholder="Subject" id="GET-ocena" type="text" name="subjectName">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="First name" id="GET-ocena" type="text" name="grade">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Last name" id="GET-ocena" type="text" name="grade">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Grade" id="GET-ocena" type="text" name="grade">
+                        </div>
+                        <div class ="cell">
+                          <input placeholder="Date" id="GET-grade-date" type="text" name="grade_date">
+                        </div>
+                        <div class ="cell noprint">
+                        Actions
+                        </div>
+                    </div>
+                    
+                    <!-- ko foreach: self.Subjects -->
+                        <!-- ko foreach: gradesList -->
+                            <div class="row row--6cols">
+                                <div class ="cell" data-bind="text: $parent.subjectName">
+                                </div>                                
+                               <div class ="cell" data-bind="text: referencedStudent.firstName">
+                                </div><div class ="cell" data-bind="text: referencedStudent.lastName">
+                                </div>
+                               <div class ="cell" data-bind="text: gradeValue">
+                                </div>
+                                <div class ="cell" data-bind="text: gradeDate">
+                                </div>
+                                <div class ="cell noprint">
+                                    <Button class = "small_button" onclick="location.href = '#Change'">Change</Button>
+                                    <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
+                                </div>
+                            </div>
+                         <!-- /ko --> 
+                     <!-- /ko --> 
+                     
             </form>  
         </div>
         </div>

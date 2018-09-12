@@ -4,7 +4,13 @@
 
 var rootURL = "http://localhost:8080/";
 
+
 var ViewModelMapping = {
+      
+    create: function(options) {
+            return new viewModel(options.data);
+        },
+
    'gradesList':{
        key: function(data){
            return ko.utils.unwrapObservable(data.id);
@@ -16,9 +22,25 @@ var ViewModelMapping = {
            return ko.utils.unwrapObservable(data.id);
        }
    }
+    
+   
 }
 
+var viewModel = function(data) {
+    ko.mapping.fromJS(data, {}, this);
+     
+    this.teacherFullname = ko.computed(function() {
+        return this.teacherFirstname() + " " + this.teacherLastname();
+    }, this);
+}
 
+var gradesModel = function(data) {
+    ko.mapping.fromJS(data, {}, this);
+     
+    this.teacherFullname = ko.computed(function() {
+        return this.teacherFirstname() + " " + this.teacherLastname();
+    }, this);
+}
 
 
 
@@ -90,16 +112,14 @@ var InitViewModel = function()
                 console.log("there is student filter");
                 return ko.utils.arrayFilter(self.selectedSubject().gradesList(), function(grade) 
                 {             
-                console.log(grade);       
+                    console.log(grade);       
                     return grade.referencedStudent.index() == self.gradeStudentFilter();
                 });
             }
         }        
     });
     
-    self.filter = function (student) {
-        
-        console.log(student);
+    self.filter = function (student) {        
         self.gradeStudentFilter(student.index);
     }
     
