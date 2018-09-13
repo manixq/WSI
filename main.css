@@ -131,6 +131,7 @@ input{
 .cell {
     display: flex;
     box-sizing: border-box;
+    text-align: left;
     flex-grow: 1;
     padding: 0.8em 1.2em;
     overflow: hidden; 
@@ -152,6 +153,9 @@ input{
 }
 .row--6cols > .cell {
   width: 16.6%;
+}
+.row--7cols > .cell {
+  width: 14.2%;
 }
 
 h2 {

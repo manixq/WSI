@@ -49,8 +49,9 @@ var InitViewModel = function()
 {
     self.gradeStudentFilter = ko.observable();
     self.selectedSubject = ko.observable(); 
+    self.gradeSubjectFilter = ko.observable();
     
-    $( document ).ready(function() {
+    
         $.ajax({
             headers: { 
                 //"Content-Type": "application/json",
@@ -62,7 +63,8 @@ var InitViewModel = function()
             dataType: 'json',
             success: function(data) { 
 
-            self.students = ko.observableArray(data);     
+            self.students = ko.observableArray(data);  
+                console.log(self.students());
             },
 
             error: function(jqxhr, status, errorMsg) {
@@ -90,7 +92,6 @@ var InitViewModel = function()
                 alert('Failed! ' + errorMsg);
             }
         });
-    });
     
      
     
@@ -99,17 +100,12 @@ var InitViewModel = function()
     {        
         if(self.selectedSubject())
         {
-            console.log("there is selected subject");
             if(!self.gradeStudentFilter()) 
-            {
-                console.log("no student filter");
-                                
+            {                                
                 return self.selectedSubject().gradesList; 
             } 
             else 
             {
-                
-                console.log("there is student filter");
                 return ko.utils.arrayFilter(self.selectedSubject().gradesList(), function(grade) 
                 {             
                     console.log(grade);       
@@ -119,8 +115,37 @@ var InitViewModel = function()
         }        
     });
     
-    self.filter = function (student) {        
+    self.filterByStudent = function (student) {        
         self.gradeStudentFilter(student.index);
+    }
+    
+     self.filterBySubject = function (subject) { 
+         
+         console.log(subject);
+         console.log(subject.gradesList());
+        self.gradeSubjectFilter(subject.gradesList());
+    }
+     
+      self.RemoveSubject = function (subject) { 
+          $.ajax(
+          {
+              headers: {                   
+                "Content-Type": "application/json",
+                //"Accept": "application/json",
+                },
+                url: rootURL + 'delete/subject?subjectName=' + subject.subjectName(),
+                type: 'DELETE',
+                success: function() 
+                {
+                    
+                    self.Subjects.remove(subject);
+                },
+                error: function(jqxhr, status, errorMsg) 
+                {
+                    alert('Failed! ' + errorMsg);
+                }
+            });
+          
     }
     
   /*  self.selectedSubject.subscribe(function(selectedSubject)   
@@ -152,4 +177,4 @@ var InitViewModel = function()
 
 
 
-new InitViewModel();
+$( document ).ready(function() { new InitViewModel()});

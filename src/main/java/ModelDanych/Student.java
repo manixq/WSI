@@ -6,30 +6,21 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "student")
 public class Student implements Serializable
 {
     @JsonIgnore
-    @XmlTransient
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    private ObjectId id;
     @Id
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    @XmlTransient
+    private ObjectId id;
     private Long index;
     private String firstName;
     private String lastName;
@@ -49,6 +40,13 @@ public class Student implements Serializable
     }
 
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
     public Long getIndex() {
         return index;
     }
