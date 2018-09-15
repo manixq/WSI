@@ -5,6 +5,8 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Entity
 @XmlRootElement(name = "subject")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Subject implements Serializable
 {
     private String subjectName;
@@ -44,21 +47,20 @@ public class Subject implements Serializable
         this.studentsList = studentsList;
     }
 
-    @XmlElement
+    @XmlElement(name = "subjectName")
     public String getSubjectName() {
 
         return subjectName;
     }
-
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
     }
 
-    @XmlElement
+    @XmlElement(name = "teacherFirstname")
     public String getTeacherFirstname() {
         return teacherFirstname;
     }
-    @XmlElement
+    @XmlElement(name = "teacherLastname")
     public String getTeacherLastname() {
         return teacherLastname;
     }
@@ -70,7 +72,7 @@ public class Subject implements Serializable
         this.teacherFirstname = teacherFirstname;
     }
 
-    @XmlElement
+    @XmlElement(name = "gradesList")
     public List<Grade> getGradesList() {
         return gradesList;
     }
@@ -95,7 +97,7 @@ public class Subject implements Serializable
     }
 
 
-    @XmlElement
+    @XmlElement(name = "studentsList")
     public List<Student> getStudentsList() {
         return studentsList;
     }

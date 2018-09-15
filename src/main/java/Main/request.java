@@ -4,6 +4,8 @@ package Main;
 import ModelDanych.Grade;
 import ModelDanych.Subject;
 import ModelDanych.Student;
+import com.mongodb.BasicDBObject;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
@@ -230,10 +232,16 @@ public class request
     @Path("/delete/student")
     public Response deleteStudenci(@DefaultValue("") @QueryParam("index") String index) {
         final Query<Student> query = Main.datastore.createQuery(Student.class);
-
+        final Query<Subject> queryRef;
+        UpdateOperations<Subject> FixRef;
         if(!index.isEmpty())
         {
-            query.field("index").equal(Long.parseLong(index,10));
+            query.disableValidation().field("index").equal(Long.parseLong(index,10));
+           // queryRef = Main.datastore.createQuery(Subject.class).field("studentsList").hasThisElement(query.get());
+
+            //FixRef = Main.datastore.createUpdateOperations(Subject.class).disableValidation().removeAll("studentsList", new BasicDBObject("ref", query.get()));
+
+            //Main.datastore.update(queryRef, FixRef);
             Main.datastore.delete(query);
             return Response.status(200).build();
 
@@ -243,12 +251,12 @@ public class request
 
     @DELETE
     @Path("/delete/subject")
-    public Response deleteSubject(@DefaultValue("") @QueryParam("subjectName") String subjectName) {
+    public Response deleteSubject(@DefaultValue("") @QueryParam("id") String id) {
         final Query<Subject> query = Main.datastore.createQuery(Subject.class);
 
-        if(subjectName != "")
+        if(id != "")
         {
-            query.field("subjectName").equal(subjectName);
+            query.field("id").equal(new ObjectId(id));
             Main.datastore.delete(query);
             return Response.status(200).build();
 

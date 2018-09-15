@@ -53,10 +53,10 @@ public class Main
 
 
         gradesArray.add(new Grade(4.5, new Date(), studentsArray.get(0)));
-        gradesArray2.add(new Grade(3.5, new Date(), studentsArray.get(1)));
-        gradesArray3.add(new Grade(3.0, new Date(), studentsArray.get(2)));
-        gradesArray.add(new Grade(2.0, new Date(), studentsArray.get(0)));
-        gradesArray2.add(new Grade(5.0, new Date(), studentsArray.get(1)));
+        gradesArray.add(new Grade(3.5, new Date(), studentsArray.get(1)));
+        gradesArray2.add(new Grade(3.0, new Date(), studentsArray.get(2)));
+        gradesArray2.add(new Grade(2.0, new Date(), studentsArray.get(0)));
+        gradesArray3.add(new Grade(5.0, new Date(), studentsArray.get(1)));
         gradesArray3.add(new Grade(4.0, new Date(), studentsArray.get(2)));
 
         List<Subject> subjectsArray = new ArrayList<Subject>();

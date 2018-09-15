@@ -26,11 +26,10 @@
         <div class="container" id="ManageCourses">                
             <h1>List of Courses</h1>
             
-            <form  id="GETstudents" Actions="http://localhost:8080/studentsList" method="get">                     
+            <form>                     
                     <div class="row row--3cols">
                         <div class ="cell">
-                          <input type="search" placeholder="Subject" id="GET-index" type="text" name="firstName">
-                            
+                          <input>                            
                         </div>
                         <div class ="cell">
                           <input placeholder="Teacher" id="GET-firstName" type="text" name="firstName">
@@ -39,17 +38,19 @@
                         Actions
                         </div>
                     </div>
+                        <!-- ko if: Subjects -->
                     <!-- ko foreach: Subjects -->
-                        <div data-bind="if:subjectName" class="row row--3cols" >
-                            <div class ="cell" data-bind="text: subjectName">
+                            <div data-bind="if:subjectName" class="row row--3cols" >
+                                <div class ="cell" data-bind="text: subjectName">
+                                </div>
+                               <div class ="cell" data-bind="text: teacherFullname">
+                                </div>                   
+                                <div class ="cell noprint">
+                                    <Button class = "small_button" onclick="location.href = '#ManageSeeAllGrades'" data-bind="click: function() { filterBySubject($data) }">Grades</Button>
+                                    <Button class = "small_button" data-bind="click: function() { RemoveSubject($data) }">Delete</Button>
+                                </div>
                             </div>
-                           <div class ="cell" data-bind="text: teacherFullname">
-                            </div>                   
-                            <div class ="cell noprint">
-                                <Button class = "small_button" onclick="location.href = '#ManageSeeAllGrades'" data-bind="click: function() { filterBySubject($data) }"  >Grades</Button>
-                                <Button class = "small_button" data-bind="click: function() { RemoveSubject($data) }">Delete</Button>
-                            </div>
-                        </div>
+                        <!-- /ko --> 
                     <!-- /ko --> 
                 
             </form>  
@@ -57,7 +58,7 @@
         </div>
         <div class="container" id="ManageStudents">
             <h1>List of Students</h1>
-            <form id="GETstudents" Actions="http://localhost:8080/studentsList" method="get">                     
+            <form>                     
                     <div class="row row--5cols">
                         <div class ="cell">
                           <input type="search" placeholder="Index" id="GET-index" type="text" name="firstName">
@@ -76,33 +77,30 @@
                         Actions
                         </div>
                     </div>
-                    <!-- ko foreach: students -->
-                        <div class="row row--5cols" >
-                            <div class ="cell" data-bind="text: index">
-                              12312312
+                        <!-- ko foreach: students -->
+                    <!-- ko if: firstName -->
+                            <div class="row row--5cols" >
+                                <div class ="cell" data-bind="text: index">
+                                </div>
+                               <div class ="cell" data-bind="text: firstName">
+                                </div>
+                                <div class ="cell" data-bind="text: lastName">
+                                </div>
+                                 <div class ="cell" data-bind="text: bornDate">
+                                </div>
+                                <div class ="cell noprint">
+                                    <Button class = "small_button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filterByStudent($data) }">Grades</Button>
+                                    <Button class = "small_button"  data-bind="click: function() { RemoveStudent($data) }" >Delete</Button>
+                                </div>
                             </div>
-                           <div class ="cell" data-bind="text: firstName">
-                              Marek
-                            </div>
-                            <div class ="cell" data-bind="text: lastName">
-                              Antoniusz
-                            </div>
-                             <div class ="cell" data-bind="text: bornDate">
-                              14-01-83
-                            </div>
-                            <div class ="cell noprint">
-                                <Button class = "small_button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filterByStudent($data) }" id="SeeGrades" >Grades</Button>
-                                <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
-                            </div>
-                        </div>
+                        <!-- /ko --> 
                     <!-- /ko --> 
                 
             </form>  
         </div>
         <div class="container" id="ManageSeeGrades">
             <h1>List of Grades</h1>
-            <form id="GetGrades" Actions="http://localhost:8080/Oceny" method="get">
-                
+            <form>                
                     <div class="row row--4cols">
                         <div class ="cell">
                             
@@ -122,21 +120,23 @@
                     </div>
                     
                     <!-- ko foreach: self.filterGrades() -->
-                    <div class="row row--4cols">
-                        <div class ="cell" data-bind="text: self.selectedSubject().subjectName">
-                          Matematyka
+                        <!-- ko if: self.selectedSubject() -->
+                        <div class="row row--4cols">
+                            <div class ="cell" data-bind="text: self.selectedSubject().subjectName">
+                              Matematyka
+                            </div>
+                           <div class ="cell" data-bind="text: gradeValue">
+                              2.0
+                            </div>
+                            <div class ="cell" data-bind="text: gradeDate">
+                              24-03-70
+                            </div>
+                            <div class ="cell noprint">
+                                <Button class = "small_button">Change</Button>
+                                <Button class = "small_button">Delete</Button>
+                            </div>
                         </div>
-                       <div class ="cell" data-bind="text: gradeValue">
-                          2.0
-                        </div>
-                        <div class ="cell" data-bind="text: gradeDate">
-                          24-03-70
-                        </div>
-                        <div class ="cell noprint">
-                            <Button class = "small_button" onclick="location.href = '#Change'">Change</Button>
-                            <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
-                        </div>
-                    </div>
+                         <!-- /ko --> 
                      <!-- /ko --> 
                      
                
@@ -145,8 +145,7 @@
             
             <div class="container" id="ManageSeeAllGrades">
             <h1>List of Grades</h1>
-            <form id="GetGrades" Actions="http://localhost:8080/Oceny" method="get">
-                
+            <form>
                     <div class="row row--6cols">
                        <div class ="cell">
                           <input placeholder="Subject" id="GET-ocena" type="text" name="subjectName">
@@ -170,22 +169,24 @@
                     
                     <!-- ko foreach: self.gradeSubjectFilter -->
                         <!-- ko if: referencedStudent -->
-                            <div data-bind="$parent[0]" class="row row--6cols">
-                                <div class ="cell" data-bind="text: $parent[0].subjectName">
-                                </div>                            
-                               <div class ="cell" data-bind="text: referencedStudent.firstName">
+                            <!-- ko if: referencedStudent.firstName -->
+                                <div data-bind="$parent[0]" class="row row--6cols">
+                                    <div class ="cell" data-bind="text: $parent[0].subjectName">
+                                    </div>                            
+                                   <div class ="cell" data-bind="text: referencedStudent.firstName">
+                                    </div>
+                                    <div class ="cell" data-bind="text: referencedStudent.lastName">
+                                    </div>
+                                   <div class ="cell" data-bind="text: gradeValue">
+                                    </div>
+                                    <div class ="cell" data-bind="text: gradeDate">
+                                    </div>
+                                    <div class ="cell noprint">
+                                        <Button class = "small_button">Change</Button>
+                                        <Button class = "small_button">Delete</Button>
+                                    </div>
                                 </div>
-                                <div class ="cell" data-bind="text: referencedStudent.lastName">
-                                </div>
-                               <div class ="cell" data-bind="text: gradeValue">
-                                </div>
-                                <div class ="cell" data-bind="text: gradeDate">
-                                </div>
-                                <div class ="cell noprint">
-                                    <Button class = "small_button" onclick="location.href = '#Change'">Change</Button>
-                                    <Button class = "small_button" onclick="location.href = '#Delete'">Delete</Button>
-                                </div>
-                            </div>
+                             <!-- /ko --> 
                          <!-- /ko --> 
                      <!-- /ko --> 
                      

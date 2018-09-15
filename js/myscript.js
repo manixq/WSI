@@ -126,19 +126,40 @@ var InitViewModel = function()
         self.gradeSubjectFilter(subject.gradesList());
     }
      
-      self.RemoveSubject = function (subject) { 
+      self.RemoveSubject = function (subject) 
+      { 
           $.ajax(
           {
               headers: {                   
                 "Content-Type": "application/json",
                 //"Accept": "application/json",
                 },
-                url: rootURL + 'delete/subject?subjectName=' + subject.subjectName(),
+                url: rootURL + 'delete/subject?id=' + subject.id(),
                 type: 'DELETE',
                 success: function() 
                 {
-                    
                     self.Subjects.remove(subject);
+                },
+                error: function(jqxhr, status, errorMsg) 
+                {
+                    alert('Failed! ' + errorMsg);
+                }
+            });          
+    }
+      
+      self.RemoveStudent = function (student) 
+      { 
+          $.ajax(
+          {
+              headers: {                   
+                "Content-Type": "application/json",
+                //"Accept": "application/json",
+                },
+                url: rootURL + 'delete/student?index=' + student.index,
+                type: 'DELETE',
+                success: function() 
+                {                    
+                    self.students.remove(student);
                 },
                 error: function(jqxhr, status, errorMsg) 
                 {

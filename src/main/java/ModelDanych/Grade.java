@@ -6,6 +6,8 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -14,6 +16,7 @@ import java.util.Date;
 
 @Entity
 @XmlRootElement(name = "grade")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Grade implements Serializable
 {
     @Id
@@ -36,7 +39,7 @@ public class Grade implements Serializable
         this.referencedStudent = referencedStudent;
     }
 
-    @XmlElement
+    @XmlElement(name = "gradeValue")
     public double getGradeValue() {
         return gradeValue;
     }
@@ -46,6 +49,7 @@ public class Grade implements Serializable
         this.gradeValue = Math.round(gradeValue * 2) / 2.0;
     }
 
+    @XmlElement(name = "gradeDate")
     public Date getGradeDate() {
         return gradeDate;
     }
@@ -54,6 +58,7 @@ public class Grade implements Serializable
         this.gradeDate = gradeDate;
     }
 
+    @XmlElement(name = "referencedStudent")
     public Student getReferencedStudent() {
         return referencedStudent;
     }

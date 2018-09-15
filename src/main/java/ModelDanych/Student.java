@@ -12,15 +12,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "student")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Student implements Serializable
 {
+    @XmlTransient
     @JsonIgnore
+    private ObjectId id;
     @Id
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
-    @XmlTransient
-    private ObjectId id;
     private Long index;
     private String firstName;
     private String lastName;
@@ -40,6 +40,7 @@ public class Student implements Serializable
     }
 
 
+    @XmlElement(name = "id")
     public ObjectId getId() {
         return id;
     }
@@ -55,7 +56,8 @@ public class Student implements Serializable
         this.index = index;
     }
 
-    @XmlElement
+
+    @XmlElement(name = "firstName")
     public String getFirstName() {
         return firstName;
     }
@@ -64,7 +66,8 @@ public class Student implements Serializable
         this.firstName = firstName;
     }
 
-    @XmlElement
+
+    @XmlElement(name = "lastName")
     public String getLastName() {
         return lastName;
     }
@@ -73,6 +76,7 @@ public class Student implements Serializable
         this.lastName = lastName;
     }
 
+    @XmlElement(name = "bornDate")
     public Date getBornDate() {
         return bornDate;
     }
