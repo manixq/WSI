@@ -23,7 +23,7 @@ public class request
     }
 
     @GET
-    @Path("/student")
+    @Path("/students")
     @Produces({"application/xml", "application/json"})
     public List<Student> getStudent(@DefaultValue("") @QueryParam("firstName") String firstName, @DefaultValue("") @QueryParam("lastName") String lastName)
     {
@@ -109,7 +109,7 @@ public class request
     }
 
     @GET
-    @Path("/subject")
+    @Path("/subjects")
     @Produces({"application/xml", "application/json"})
     public List<Subject> getSubject(@DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname, @DefaultValue("") @QueryParam("subjectName") String subjectName)
     {
@@ -271,7 +271,7 @@ public class request
 
         if(!id.isEmpty())
         {
-            query.field("id").equal(id);
+            query.field("id").equal(new ObjectId(id));
             Main.datastore.delete(query);
             return Response.status(200).build();
 

@@ -47,9 +47,13 @@ var gradesModel = function(data) {
 
 var InitViewModel = function()
 {
-    self.gradeStudentFilter = ko.observable();
+    self.gradeStudentFilter = ko.observableArray();
     self.selectedSubject = ko.observable(); 
-    self.gradeSubjectFilter = ko.observable();
+    self.gradeSubjectFilter = ko.observableArray();
+    
+    self.inputSubjectName = ko.observable(); 
+    self.inputTeacherFirstName = ko.observable(); 
+    self.inputTeacherLastName = ko.observable(); 
     
     
         $.ajax({
@@ -58,17 +62,17 @@ var InitViewModel = function()
                 "Accept": "application/json",
             },
             type: 'GET',
-            url: rootURL + 'student',
+            url: rootURL + 'students',
             crossDomain: true,
             dataType: 'json',
             success: function(data) { 
 
             self.students = ko.observableArray(data);  
-                console.log(self.students());
+            console.log(self.students());
             },
 
             error: function(jqxhr, status, errorMsg) {
-                alert('Failed! ' + errorMsg);
+                console.log('Cant get students! ' + errorMsg);
             }
         });
 
@@ -78,7 +82,7 @@ var InitViewModel = function()
                 "Accept": "application/json",
             },
             type: 'GET',
-            url: rootURL + 'subject',
+            url: rootURL + 'subjects',
             crossDomain: true,
             dataType: 'json',
             success: function(data) 
@@ -89,7 +93,7 @@ var InitViewModel = function()
             },        
             error: function(jqxhr, status, errorMsg) 
             {
-                alert('Failed! ' + errorMsg);
+                console.log('Cant get subjects! ' + errorMsg);
             }
         });
     
@@ -108,22 +112,56 @@ var InitViewModel = function()
             {
                 return ko.utils.arrayFilter(self.selectedSubject().gradesList(), function(grade) 
                 {             
-                    console.log(grade);       
-                    return grade.referencedStudent.index() == self.gradeStudentFilter();
+                    if(grade.referencedStudent.index)
+                    {
+                        console.log(grade.referencedStudent.index());     
+                        return grade.referencedStudent.index() == self.gradeStudentFilter().index;
+                    }
                 });
             }
         }        
     });
     
-    self.filterByStudent = function (student) {        
-        self.gradeStudentFilter(student.index);
+    self.AddSubject = function () { 
+        if(self.inputSubjectName() && self.inputTeacherFirstName() && self.inputTeacherLastName())
+            {
+                var postURL = "?subjectName="+self.inputSubjectName()+"?teacherFirstname="+self.inputTeacherFirstName()+"?teacherLastname="+self.inputTeacherLastName()
+                $.ajax({
+                    headers: { 
+                        "Content-Type": "application/json",
+                        //"Accept": "application/json",
+                    },
+                    url: rootURL + 'Subject/add'+postURL,
+                    method: 'POST',
+                    success: function (data) {
+                        console.log("posted");
+                        console.log(data);
+                        self.Subjects.push({
+
+                            subjectName: self.inputSubjectName(),                   
+                            teacherFirstname: self.inputTeacherFirstName(),        
+                            teacherLastname: self.inputTeacherLastName(),    
+                            teacherFullname: inputTeacherFirstName() + " " + inputTeacherLastName()
+                        });
+
+
+                    },
+                    error: function (data) {
+
+                        console.log("failed");
+                        console.log(data);
+
+                    }
+                });
+            }
     }
     
-     self.filterBySubject = function (subject) { 
-         
-         console.log(subject);
-         console.log(subject.gradesList());
-        self.gradeSubjectFilter(subject.gradesList());
+    self.filterByStudent = function (student) {        
+        self.gradeStudentFilter(student);
+    }
+    
+     self.filterBySubject = function (subject) {          
+        self.gradeSubjectFilter(subject);
     }
      
       self.RemoveSubject = function (subject) 
@@ -166,8 +204,29 @@ var InitViewModel = function()
                     alert('Failed! ' + errorMsg);
                 }
             });
+      }
           
-    }
+      self.RemoveGrade = function (grade, subject) 
+      { 
+          console.log(grade);
+          $.ajax(
+          {
+              headers: {                   
+                "Content-Type": "application/json",
+                //"Accept": "application/json",
+                },
+                url: rootURL + 'delete/grade?id=' + grade.id(),
+                type: 'DELETE',
+                success: function() 
+                {                       
+                    subject.gradesList.remove(grade);
+                },
+                error: function(jqxhr, status, errorMsg) 
+                {
+                    alert('Failed! ' + errorMsg);
+                }
+            });          
+        }   
     
   /*  self.selectedSubject.subscribe(function(selectedSubject)   
     {      

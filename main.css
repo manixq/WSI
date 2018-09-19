@@ -33,11 +33,26 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #008CBA; 
     border: none;
     color: white;
-    padding: 5px 5px;
+    padding: 0.5em 0.5em;
     text-align: center;
     text-decoration: none;
     font-size: 14px;
-    margin: 1px;
+    margin: 0.1em;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+.small_button--solo{
+    display = flex;
+    flex: 1;
+    background-color: #008CBA; 
+    border: none;
+    color: white;
+    padding: 0.5em 0.5em;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0.5em 0.5em 0.5em 0em;
     cursor: pointer;
     border: 1px solid #ddd;
 }
@@ -117,9 +132,9 @@ select{
     color: white;
     border: none;
 }
-input{
+.search_input{
     background: #008CB1;
-    color: white;
+    color: black;
     border: none;
 }
 .row { display: flex;
@@ -128,6 +143,7 @@ input{
 }
 .row:first-child {background: #008CBA;color:white}
 .row:nth-child(2n+3) {background: #1111}
+.row:last-child {background: #0959}
 .cell {
     display: flex;
     box-sizing: border-box;
@@ -138,23 +154,35 @@ input{
     list-style: none;
     width: 100%;
     border: 1px solid #ddd;
+    
 }
-.row--2cols > .cell {
+.data_input {
+    background: #0210;
+    text-align: left;
+    width: 100%;   
+    border: 1px solid #0212;
+    padding: 0.5em;
+    margin:0.1em;
+}
+.data_input::placeholder {
+    color: black;
+}
+.row--2cols > .cell,.inputData {
   width: 50%;
 }
-.row--3cols > .cell {
+.row--3cols > .cell ,.inputData{
   width: 33.33%;
 }
-.row--4cols > .cell {
+.row--4cols > .cell ,.inputData{
   width: 25%;
 }
-.row--5cols > .cell {
+.row--5cols > .cell ,.inputData{
   width: 20%;
 }
-.row--6cols > .cell {
+.row--6cols > .cell ,.inputData{
   width: 16.6%;
 }
-.row--7cols > .cell {
+.row--7cols > .cell ,.inputData{
   width: 14.2%;
 }
 
@@ -207,6 +235,19 @@ form:target {
         
 }
 
+#AddSubject{
+    visibility: collapse
+        
+}
+#AddStudent{
+    visibility: collapse
+        
+}
+#AddGrade{
+    visibility: collapse
+        
+}
+
 #ManageCourses{
     visibility: collapse
 }
@@ -238,7 +279,18 @@ footer{
 #ManageSeeAllGrades:target{
     visibility: visible
 }
-
+#AddSubject:target{
+    visibility: visible
+        
+}
+#AddStudent:target{
+    visibility: visible
+        
+}
+#AddGrade:target{
+    visibility: visible
+        
+}
 /* Add a pseudo-element inside the target element */
 p:target::before {
   font: 70% sans-serif;
@@ -263,7 +315,7 @@ p:target i {
 }
 @media print
 {    
-    nav, footer, img, .cell.noprint
+    nav, footer, img, .cell.noprint, button
     {
         display: none !important;
     }
