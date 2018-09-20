@@ -106,15 +106,22 @@
                             <!-- /ko --> 
                         <!-- /ko --> 
                     <!-- /ko --> 
-                    <div class="row row--4cols">
+                    <div class="row row--5cols">
                         <div class ="cell" type="input">
-                          <input class="data_input" placeholder="Subject" type="text" data-bind="value: self.inputSubjectName">                         
+                          <input class="data_input" placeholder="Index" type="text" data-bind="value: self.inputIndex">                         
                         </div>
                          <div class ="cell">
-                          <input class="data_input" placeholder="First name" data-bind="value: self.inputTeacherFirstName">                 <input class="data_input" placeholder="Last name" type="text" name="firstName" data-bind="value: self.inputTeacherLastName">     
-                        </div>           
+                          <input class="data_input" placeholder="First name" data-bind="value: self.inputStudentFirstName">  
+                        </div> 
+                        <div class ="cell">
+                        <input class="data_input" placeholder="Last name" type="text" name="firstName" data-bind="value: self.inputStudentLastName">     
+                             </div>
+                        
+                        <div class ="cell" type="input">
+                          <input class="data_input" placeholder="yyyy-mm-dd" type="text" data-bind="value: self.inputBornDate">                         
+                        </div>
                         <div class ="cell noprint">
-                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddSubject() }">Add subject</Button>
+                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddStudent() }">Add student</Button>
                         </div>
                     </div>
                 

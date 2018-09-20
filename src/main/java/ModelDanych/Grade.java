@@ -40,6 +40,10 @@ public class Grade implements Serializable
     }
 
     @XmlTransient
+    public ObjectId getId() {
+        return id;
+    }
+    @XmlTransient
     public double getGradeValue() {
         return gradeValue;
     }

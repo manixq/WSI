@@ -6,6 +6,7 @@ import ModelDanych.Subject;
 import ModelDanych.Student;
 import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
@@ -114,7 +115,6 @@ public class request
     public List<Subject> getSubject(@DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname, @DefaultValue("") @QueryParam("subjectName") String subjectName)
     {
         final Query<Subject> query = Main.datastore.createQuery(Subject.class);
-
         if(!teacherFirstname.isEmpty())
         {
             query.field("teacherFirstname").equal(teacherFirstname);
@@ -201,8 +201,8 @@ public class request
     @Path("/student/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
-    public Response postStudent() {
-        Main.datastore.save(new Student());
+    public Response postStudent(Student student) {
+        Main.datastore.save(student);
         return Response.status(201).entity("Added").build();
     }
 
@@ -211,11 +211,11 @@ public class request
     @Path("/Subject/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
-    public Response postSubject( @DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("") @QueryParam("teacherFirstname") String teacherFirstname, @DefaultValue("") @QueryParam("teacherLastname") String teacherLastname)
+    public Response postSubject(Subject subject)
     {
-        Main.datastore.save(new Subject(subjectName, teacherFirstname, teacherLastname, new ArrayList<Grade>(), new ArrayList<Student>()));
+        Main.datastore.save(subject);
 
-        return Response.status(201).entity("Added " + subjectName).build();
+        return Response.status(201).entity("Added " + subject.getSubjectName()).build();
     }
 
     @POST
@@ -233,16 +233,30 @@ public class request
     public Response deleteStudenci(@DefaultValue("") @QueryParam("index") String index) {
         final Query<Student> query = Main.datastore.createQuery(Student.class);
         final Query<Subject> queryRef;
-        UpdateOperations<Subject> FixRef;
         if(!index.isEmpty())
         {
             query.disableValidation().field("index").equal(Long.parseLong(index,10));
-           // queryRef = Main.datastore.createQuery(Subject.class).field("studentsList").hasThisElement(query.get());
+            queryRef = Main.datastore.createQuery(Subject.class).field("studentsList").hasThisElement(query.get());
+            for (Subject s:queryRef.asList()) {
+                for(int i = s.getStudentsList().size()-1; i >= 0; i--)
+                {
+                    if(s.getStudentsList().get(i).getIndex().equals(query.get().getIndex()))
+                    {
+                        s.getStudentsList().remove(i);
+                    }
+                }
+                for(int i = s.getGradesList().size()-1; i >= 0; i--)
+                {
+                    if(s.getGradesList().get(i).getReferencedStudent().getIndex().equals(query.get().getIndex()))
+                    {
+                        s.getGradesList().remove(i);
+                    }
+                }
+            }
 
-            //FixRef = Main.datastore.createUpdateOperations(Subject.class).disableValidation().removeAll("studentsList", new BasicDBObject("ref", query.get()));
+            Main.datastore.save(queryRef.asList());
+            Main.datastore.delete(query.get());
 
-            //Main.datastore.update(queryRef, FixRef);
-            Main.datastore.delete(query);
             return Response.status(200).build();
 
         }
@@ -268,10 +282,23 @@ public class request
     @Path("/delete/grade")
     public Response deleteGrade(@DefaultValue("") @QueryParam("id") String id) {
         final Query<Grade> query = Main.datastore.createQuery(Grade.class);
+        final Query<Subject> queryRef;
 
         if(!id.isEmpty())
         {
             query.field("id").equal(new ObjectId(id));
+            queryRef = Main.datastore.createQuery(Subject.class).field("gradesList").hasThisElement(query.get());
+            for (Subject s:queryRef.asList()) {
+                for(int i = s.getGradesList().size()-1; i >= 0; i--)
+                {
+                    if(s.getGradesList().get(i).getId().equals(query.get().getId()))
+                    {
+                        s.getGradesList().remove(i);
+                    }
+                }
+            }
+
+            Main.datastore.save(queryRef.asList());
             Main.datastore.delete(query);
             return Response.status(200).build();
 

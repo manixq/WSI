@@ -45,7 +45,14 @@ public class Subject implements Serializable
         this.subjectName = subjectName;
         this.teacherFirstname = teacherFirstname;
         this.teacherLastname = teacherLastname;
-        this.gradesList = inOceny;
+        if(inOceny != null)
+        {
+            this.gradesList = inOceny;
+        }
+        else
+        {
+            this.gradesList = new ArrayList<Grade>();
+        }
         this.studentsList = studentsList;
     }
 

@@ -51,9 +51,16 @@ var InitViewModel = function()
     self.selectedSubject = ko.observable(); 
     self.gradeSubjectFilter = ko.observableArray();
     
+    //subject
     self.inputSubjectName = ko.observable(); 
     self.inputTeacherFirstName = ko.observable(); 
     self.inputTeacherLastName = ko.observable(); 
+    
+    //student
+    self.inputIndex = ko.observable();
+    self.inputStudentFirstName = ko.observable();
+    self.inputStudentLastName = ko.observable();
+    self.inputBornDate = ko.observable();
     
     
         $.ajax({
@@ -122,26 +129,72 @@ var InitViewModel = function()
         }        
     });
     
-    self.AddSubject = function () { 
-        if(self.inputSubjectName() && self.inputTeacherFirstName() && self.inputTeacherLastName())
+    self.AddStudent = function () { 
+        if(self.inputIndex && self.inputStudentFirstName && self.inputStudentLastName && self.inputBornDate)
             {
-                var postURL = "?subjectName="+self.inputSubjectName()+"?teacherFirstname="+self.inputTeacherFirstName()+"?teacherLastname="+self.inputTeacherLastName()
                 $.ajax({
                     headers: { 
                         "Content-Type": "application/json",
                         //"Accept": "application/json",
                     },
-                    url: rootURL + 'Subject/add'+postURL,
+                    url: rootURL + 'student/add',
                     method: 'POST',
+                    data: JSON.stringify({
+                        index: self.inputIndex(),                   
+                        firstName: self.inputStudentFirstName(),        
+                        lastName: self.inputStudentLastName(),   
+                        bornDate: self.inputBornDate()
+                    }),
+                    datatype: "json",
                     success: function (data) {
-                        console.log("posted");
+                        console.log(data);
+                        self.students.push({
+                            index: self.inputSubjectName(),                   
+                            firstName: self.inputTeacherFirstName(),        
+                            lastName: self.inputTeacherLastName(),    
+                            bornDate: self.inputBornDate()                            
+                        });
+
+
+                    },
+                    error: function (data) {
+
+                        console.log("failed");
+                        console.log(data);
+
+                    }
+                });
+            }
+    }
+    
+    self.AddSubject = function () { 
+        if(self.inputSubjectName() && self.inputTeacherFirstName() && self.inputTeacherLastName())
+            {
+                $.ajax({
+                    headers: { 
+                        "Content-Type": "application/json",
+                        //"Accept": "application/json",
+                    },
+                    url: rootURL + 'Subject/add',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        subjectName: self.inputSubjectName(),                   
+                        teacherFirstname: self.inputTeacherFirstName(),        
+                        teacherLastname: self.inputTeacherLastName(),   
+                        gradesList: [],
+                        studentsList: []
+                    }),
+                    datatype: "json",
+                    success: function (data) {
                         console.log(data);
                         self.Subjects.push({
-
                             subjectName: self.inputSubjectName(),                   
                             teacherFirstname: self.inputTeacherFirstName(),        
                             teacherLastname: self.inputTeacherLastName(),    
-                            teacherFullname: inputTeacherFirstName() + " " + inputTeacherLastName()
+                            teacherFullname: inputTeacherFirstName() + " " + inputTeacherLastName(),
+                            gradesList: [],
+                            studentsList: []
+                            
                         });
 
 
@@ -197,7 +250,7 @@ var InitViewModel = function()
                 type: 'DELETE',
                 success: function() 
                 {                    
-                    self.students.remove(student);
+                    self.students.remove(student);   
                 },
                 error: function(jqxhr, status, errorMsg) 
                 {
