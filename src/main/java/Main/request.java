@@ -197,6 +197,17 @@ public class request
         //return Response.status(200).entity("Response studentId").build();
     }
 
+    @GET
+    @Path("/grades")
+    @Produces({"application/xml", "application/json"})
+    public List<Grade> getGrades()
+    {
+        final Query<Grade> query = Main.datastore.createQuery(Grade.class);
+
+        return query.asList();
+    }
+
+
     @POST
     @Path("/student/add")
     @Consumes({"application/xml", "application/json"})
@@ -215,17 +226,17 @@ public class request
     {
         Main.datastore.save(subject);
 
-        return Response.status(201).entity("Added " + subject.getSubjectName()).build();
+        return Response.status(201).entity(subject.getSubjectId().toString()).build();
     }
 
     @POST
     @Path("/Grade/add")
     @Consumes({"application/xml", "application/json"})
     //@Produces({"application/xml", "application/json"})
-    public Response postGrade() {
-        Main.datastore.save(new Grade(2.0, new Date(), null));
+    public Response postGrade(Grade grade) {
+        Main.datastore.save(grade);
 
-        return Response.status(201).entity("Added new grade").build();
+        return Response.status(201).entity(grade.getId().toString()).build();
     }
 
     @DELETE

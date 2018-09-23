@@ -10,7 +10,7 @@ var ViewModelMapping = {
     create: function(options) {
             return new viewModel(options.data);
         },
-
+/*
    'gradesList':{
        key: function(data){
            return ko.utils.unwrapObservable(data.id);
@@ -19,12 +19,14 @@ var ViewModelMapping = {
     
    'studentsList':{
        key: function(data){
-           return ko.utils.unwrapObservable(data.id);
+           return ko.utils.unwrapObservable(data.index);
        }
-   }
+   }*/
     
    
 }
+
+
 
 var viewModel = function(data) {
     ko.mapping.fromJS(data, {}, this);
@@ -62,6 +64,10 @@ var InitViewModel = function()
     self.inputStudentLastName = ko.observable();
     self.inputBornDate = ko.observable();
     
+    //grade
+    self.inputGradeValue = ko.observable();
+    self.inputGradeDate = ko.observable();
+    
     
         $.ajax({
             headers: { 
@@ -82,7 +88,27 @@ var InitViewModel = function()
                 console.log('Cant get students! ' + errorMsg);
             }
         });
+        
+        $.ajax({
+            headers: { 
+                //"Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            type: 'GET',
+            url: rootURL + 'grades',
+            crossDomain: true,
+            dataType: 'json',
+            success: function(data) { 
 
+            self.grades = ko.observableArray(data);  
+            console.log(self.grades());
+            },
+
+            error: function(jqxhr, status, errorMsg) {
+                console.log('Cant get grades! ' + errorMsg);
+            }
+        });
+    
         $.ajax({
             headers: { 
                 //"Content-Type": "application/json",
@@ -95,8 +121,9 @@ var InitViewModel = function()
             success: function(data) 
             {           
                 self.Subjects = ko.mapping.fromJS(data, ViewModelMapping);
-                
+                console.log(data);
                 ko.applyBindings(self.Subjects); 
+                console.log(self.Subjects()[1].gradesList());
             },        
             error: function(jqxhr, status, errorMsg) 
             {
@@ -105,7 +132,15 @@ var InitViewModel = function()
         });
     
      
+
+    self.filterByStudent = function (student) {        
+        self.gradeStudentFilter(student);
+    }
     
+     self.filterBySubject = function (subject) {          
+        self.gradeSubjectFilter(subject);
+         console.log(self.gradeSubjectFilter().gradesList());
+    }
     
     self.filterGrades = ko.computed(function() 
     {        
@@ -118,16 +153,79 @@ var InitViewModel = function()
             else 
             {
                 return ko.utils.arrayFilter(self.selectedSubject().gradesList(), function(grade) 
-                {             
+                {     
+                    console.log("asd");
                     if(grade.referencedStudent.index)
                     {
-                        console.log(grade.referencedStudent.index());     
+                        console.log(grade.referencedStudent);     
                         return grade.referencedStudent.index() == self.gradeStudentFilter().index;
                     }
                 });
             }
         }        
     });
+    
+    
+
+    self.AddGrade = function () {         
+        if( self.gradeStudentFilter().index)        
+            {
+                
+                console.log(self.inputGradeValue()); 
+                console.log(self.gradeStudentFilter().firstName);
+                $.ajax({
+                    headers: { 
+                        "Content-Type": "application/json",
+                        //"Accept": "application/json",
+                    },
+                    url: rootURL + 'Grade/add',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        gradeValue: self.inputGradeValue(),                   
+                        gradeDate: self.inputGradeDate(),        
+                        referencedStudent: self.gradeStudentFilter()
+                        
+                        
+                        
+                    }),
+                    datatype: "json",
+                    success: function (data) {
+                        console.log(data);                        
+                        
+                        self.grades.push({                           
+                            id: ko.observable(data),
+                            gradeValue: self.inputGradeValue(),               
+                            gradeDate: self.inputGradeDate(),        
+                            referencedStudent: self.gradeStudentFilter()
+                        })
+                        
+                        self.selectedSubject().gradesList.push({                           
+                            id: ko.observable(data),
+                            gradeValue: self.inputGradeValue(),               
+                            gradeDate: self.inputGradeDate(),        
+                            referencedStudent: {
+                                '$ref':'Student',
+                                '$id' : self.gradeStudentFilter().index
+                            }
+                        })
+                
+                        console.log(self.filterGrades());
+                        console.log(self.selectedSubject().gradesList());
+                        //if( self.selectedSubject())
+                        //
+                        //UpdateSubject(self.selectedSubject());
+
+
+                    },
+                    error: function (data) {
+
+                        console.log("failed");
+                        console.log(data);
+
+                    }
+                });
+            }
+    }
     
     self.AddStudent = function () { 
         if(self.inputIndex && self.inputStudentFirstName && self.inputStudentLastName && self.inputBornDate)
@@ -149,9 +247,9 @@ var InitViewModel = function()
                     success: function (data) {
                         console.log(data);
                         self.students.push({
-                            index: self.inputSubjectName(),                   
-                            firstName: self.inputTeacherFirstName(),        
-                            lastName: self.inputTeacherLastName(),    
+                            index: self.inputIndex(),                   
+                            firstName: self.inputStudentFirstName(),        
+                            lastName: self.inputStudentLastName(),    
                             bornDate: self.inputBornDate()                            
                         });
 
@@ -165,6 +263,32 @@ var InitViewModel = function()
                     }
                 });
             }
+    }
+    
+    self.UpdateSubject= function (subject) { 
+       console.log(subject);
+                $.ajax({
+                    headers: { 
+                        "Content-Type": "application/json",
+                        //"Accept": "application/json",
+                    },
+                    url: rootURL + 'Subject/add',
+                    method: 'POST',
+                    data: ko.toJS(subject),
+                    datatype: "json",
+                    success: function (data) {
+                        
+
+                        console.log(data);
+                        console.log("ok");
+                    },
+                    error: function (data) {
+
+                        console.log("failed");
+                        console.log(data);
+
+                    }
+                });
     }
     
     self.AddSubject = function () { 
@@ -188,6 +312,7 @@ var InitViewModel = function()
                     success: function (data) {
                         console.log(data);
                         self.Subjects.push({
+                            id: ko.observable(data),
                             subjectName: self.inputSubjectName(),                   
                             teacherFirstname: self.inputTeacherFirstName(),        
                             teacherLastname: self.inputTeacherLastName(),    
@@ -196,6 +321,10 @@ var InitViewModel = function()
                             studentsList: []
                             
                         });
+                        
+                        self.inputSubjectName(null)
+                        self.inputTeacherFirstName(null); 
+                        self.inputTeacherLastName(null);
 
 
                     },
@@ -209,13 +338,6 @@ var InitViewModel = function()
             }
     }
     
-    self.filterByStudent = function (student) {        
-        self.gradeStudentFilter(student);
-    }
-    
-     self.filterBySubject = function (subject) {          
-        self.gradeSubjectFilter(subject);
-    }
      
       self.RemoveSubject = function (subject) 
       { 
@@ -280,34 +402,14 @@ var InitViewModel = function()
                 }
             });          
         }   
-    
-  /*  self.selectedSubject.subscribe(function(selectedSubject)   
-    {      
-        self.filteredGrades = ko.toJS(ko.computed(function()
-        {
-            self.allGrades = ko.observableArray(); 
-            if(!self.selectedSubject())   
-            {                 
-                ko.utils.arrayForEach(self.Subjects(), function(subject) 
-                {
-                    self.allGrades.push.apply(self.allGrades, subject.gradesList());
-                });
 
-                return allGrades;
-            }
-                       
-            return self.selectedSubject().gradesList();
-        }));
-     });*/
     
+
     
-    
-    
-    //self.selectedSubjectGrades = ko.observableArray();
-    //self.selectedSubject = ko.observable($('#SelectSubjectToGetGrades'));
+ function preventNumberInput(e){
+    e.preventDefault();
 }
 
-
-
+}
 
 $( document ).ready(function() { new InitViewModel()});

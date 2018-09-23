@@ -39,7 +39,7 @@
                     </div>
                     <!-- ko if: self.Subjects -->
                         <!-- ko foreach: self.Subjects -->
-                            <div data-bind="if:subjectName" class="row row--3cols" >
+                            <div  class="row row--3cols" >
                                 <div class ="cell" data-bind="text: subjectName">
                                 </div>
                                <div class ="cell" data-bind="text: teacherFullname">
@@ -141,10 +141,10 @@
                             
                     </div>
                         <div class ="cell">
-                          <input placeholder="Grade" id="GET-ocena" type="text" name="grade">
+                          <input class="search_input" placeholder="Grade"  type="text" name="grade">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Date" id="GET-grade-date" type="text" name="grade_date">
+                          <input class="search_input" placeholder="Date" type="text" name="grade_date">
                         </div>
                         <div class ="cell noprint">
                         Actions
@@ -169,8 +169,26 @@
                             </div>
                         </div>
                          <!-- /ko --> 
-                     <!-- /ko --> 
-                     
+                     <!-- /ko -->
+                    
+                     <div class="row row--4cols">
+                        <!-- ko if: self.selectedSubject() -->
+                        <div class ="cell" >
+                         <input class="data_input" data-bind="textInput: self.selectedSubject().subjectName" disabled>
+                         </div>
+                        <!-- /ko -->
+                        <!-- ko ifnot: self.selectedSubject() -->
+                        <div class ="cell"></div>
+                        <!-- /ko -->
+                        <div class ="cell">
+                        <input class="data_input" type="number" placeholder="Grade" data-bind="value: self.inputGradeValue" step="0.5" min="2" max="5.5" onkeydown="preventNumberInput(event)"
+               onkeyup="preventNumberInput(event)"></div> 
+                        <div class ="cell" type="input">
+                          <input class="data_input" placeholder="yyyy-mm-dd" type="text" data-bind="value: self.inputGradeDate"> </div>
+                        <div class ="cell noprint">
+                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddGrade() }">Add grade</Button>
+                        </div>
+                    </div>
                
             </form>  
         </div>
@@ -182,31 +200,30 @@
             <form>
                     <div class="row row--5cols">                       
                         <div class ="cell">
-                          <input placeholder="First name" id="GET-ocena" type="text" name="grade">
+                          <input class="search_input" placeholder="First name" type="text">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Last name" id="GET-ocena" type="text" name="grade">
+                          <input class="search_input" placeholder="Last name" type="text">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Grade" id="GET-ocena" type="text" name="grade">
+                          <input class="search_input" placeholder="Grade" type="text">
                         </div>
                         <div class ="cell">
-                          <input placeholder="Date" id="GET-grade-date" type="text" name="grade_date">
+                          <input class="search_input" placeholder="Date" type="text">
                         </div>
                         <div class ="cell noprint">
                         Actions
                         </div>
                     </div>
                     
-                    <!-- ko if: self.gradeSubjectFilter() -->
+                        <!-- ko if: self.gradeSubjectFilter().gradesList -->
                         <!-- ko foreach: self.gradeSubjectFilter().gradesList -->
-                            <!-- ko if: referencedStudent.firstName -->
                                 <div class="row row--5cols">        
                                    <div class ="cell" data-bind="text: referencedStudent.firstName">
                                     </div>
                                     <div class ="cell" data-bind="text: referencedStudent.lastName">
                                     </div>
-                                   <div class ="cell" data-bind="text: gradeValue" step="0.5" min="2.0" max ="5.5">
+                                   <div class ="cell" data-bind="text: gradeValue">
                                     </div>
                                     <div class ="cell" data-bind="text: gradeDate">
                                     </div>
@@ -216,9 +233,10 @@
                                     </div>
                                 </div>
                              <!-- /ko --> 
-                         <!-- /ko --> 
-                     <!-- /ko --> 
-                     
+                             <!-- /ko --> 
+                     <div class="row row--5cols">
+                       
+                    </div>
                 </form>  
             </div>
             

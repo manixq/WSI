@@ -5,7 +5,10 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,19 +19,14 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Subject implements Serializable
 {
-    @XmlElement(name = "subjectName")
     private String subjectName;
     @Id
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private ObjectId id;
-    @XmlElement(name = "teacherFirstname")
     private String teacherFirstname;
-    @XmlElement(name = "teacherLastname")
     private String teacherLastname;
-    @XmlElement(name = "gradesList")
     @Reference
     private List<Grade> gradesList;
-    @XmlElement(name = "studentsList")
     @Reference
     private List<Student> studentsList;
 
@@ -45,38 +43,32 @@ public class Subject implements Serializable
         this.subjectName = subjectName;
         this.teacherFirstname = teacherFirstname;
         this.teacherLastname = teacherLastname;
-        if(inOceny != null)
-        {
-            this.gradesList = inOceny;
-        }
-        else
-        {
-            this.gradesList = new ArrayList<Grade>();
-        }
+        this.gradesList = inOceny;
         this.studentsList = studentsList;
     }
 
-    @XmlTransient
+    @XmlElement(name = "subjectName")
     public String getSubjectName() {
 
         return subjectName;
     }
 
-    @XmlTransient
+    public ObjectId getSubjectId()
+    {
+        return id;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    @XmlElement(name = "teacherFirstname")
     public String getTeacherFirstname() {
         return teacherFirstname;
     }
-    @XmlTransient
+    @XmlElement(name = "teacherLastname")
     public String getTeacherLastname() {
         return teacherLastname;
-    }
-    @XmlTransient
-    public List<Student> getStudentsList() {
-        return studentsList;
-    }
-    @XmlTransient
-    public List<Grade> getGradesList() {
-        return gradesList;
     }
 
     public void setTeacherLastname(String teacherLastname) {
@@ -85,10 +77,11 @@ public class Subject implements Serializable
     public void setTeacherFirstname(String teacherFirstname) {
         this.teacherFirstname = teacherFirstname;
     }
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
 
+    @XmlElement(name = "gradesList")
+    public List<Grade> getGradesList() {
+        return gradesList;
+    }
 
     public List<Grade> getGradeByStudent(Long index) {
         List<Grade> lGradesList = new ArrayList<Grade>();
@@ -101,12 +94,20 @@ public class Subject implements Serializable
 
         return lGradesList;
     }
+
     public void setGrade(List<Grade> gradesList) {
         this.gradesList = gradesList;
     }
     public void addGrade(Grade inGrade) {
         this.gradesList.add(inGrade);
     }
+
+
+    @XmlElement(name = "studentsList")
+    public List<Student> getStudentsList() {
+        return studentsList;
+    }
+
     public void setStudentsList(List<Student> studentsList) {
         this.studentsList = studentsList;
     }

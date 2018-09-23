@@ -6,7 +6,10 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.util.Date;
@@ -19,13 +22,10 @@ public class Grade implements Serializable
     @Id
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private ObjectId id;
-    @XmlElement(name = "gradeValue")
     private double gradeValue;
-    @XmlElement(name = "gradeDate")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
     private Date gradeDate;
     @Reference
-    @XmlElement(name = "referencedStudent")
     private Student referencedStudent;
 
     public Grade()
@@ -39,29 +39,33 @@ public class Grade implements Serializable
         this.referencedStudent = referencedStudent;
     }
 
-    @XmlTransient
-    public ObjectId getId() {
-        return id;
-    }
-    @XmlTransient
+    @XmlElement(name = "gradeValue")
     public double getGradeValue() {
         return gradeValue;
     }
-    @XmlTransient
+    @XmlElement(name = "id")
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setGradeValue(float gradeValue) {
+        this.gradeValue = Math.round(gradeValue * 2) / 2.0;
+    }
+
+    @XmlElement(name = "gradeDate")
     public Date getGradeDate() {
         return gradeDate;
-    }
-    @XmlTransient
-    public Student getReferencedStudent() {
-        return referencedStudent;
     }
 
     public void setGradeDate(Date gradeDate) {
         this.gradeDate = gradeDate;
     }
-    public void setGradeValue(float gradeValue) {
-        this.gradeValue = Math.round(gradeValue * 2) / 2.0;
+
+    @XmlElement(name = "referencedStudent")
+    public Student getReferencedStudent() {
+        return referencedStudent;
     }
+
     public void setReferencedStudent(Student referencedStudent) {
         this.referencedStudent = referencedStudent;
     }
