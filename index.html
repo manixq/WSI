@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="desc" content="An interactive html.">
+        <meta name="viewport" content="width=1000, initial-scale=1">
         <link rel="stylesheet" href="main.css">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type='text/javascript' src="js/knockout.js"></script>
@@ -17,230 +18,248 @@
         
         <img src="screenshots/quick-edit.png" alt=":(">
         <div id="mainContainer">
+            
         <nav>     
-            <a href="#ManageStudents"><button  class="button button2 button_students">Manage students</button></a>
-            <a href="#ManageCourses"><button  class="button button2 button_courses">Manage courses</button></a>
-       </nav>
+            <button type="button" id="ManageStudentsButton" class="button button2 button_students" >Manage students</button>
+            <button type="button" id="ManageCoursesButton" class="button button2 button_courses">Manage courses</button>
+        </nav>
+            
         <div class="column_container">
-        <div class="container" id="ManageCourses">                
-            <h1>List of Courses</h1>              
-               
-            <form>                     
-                    <div class="row row--3cols">
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Subject">                            
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Teacher" id="GET-firstName" type="text" name="firstName">
-                        </div>                   
-                        <div class ="cell noprint">
-                        Actions
-                        </div>
-                    </div>
-                    <!-- ko if: self.Subjects -->
-                        <!-- ko foreach: self.Subjects -->
-                            <div  class="row row--3cols" >
-                                <div class ="cell" data-bind="text: subjectName">
-                                </div>
-                               <div class ="cell" data-bind="text: teacherFullname">
-                                </div>                   
-                                <div class ="cell noprint">
-                                    <Button class = "small_button" onclick="location.href = '#ManageSeeAllGrades'" data-bind="click: function() { filterBySubject($data) }">Grades</Button>
-                                    <Button class = "small_button" data-bind="click: function() { RemoveSubject($data) }">Delete</Button>
-                                </div>
-                            </div>
-                        <!-- /ko --> 
-                    <!-- /ko --> 
-                     <div class="row row--3cols">
-                        <div class ="cell" type="input">
-                          <input class="data_input" placeholder="Subject" type="text" data-bind="value: self.inputSubjectName">                         
-                        </div>
-                         <div class ="cell">
-                          <input class="data_input" placeholder="First name" data-bind="value: self.inputTeacherFirstName">                 <input class="data_input" placeholder="Last name" type="text" name="firstName" data-bind="value: self.inputTeacherLastName">     
-                        </div>           
-                        <div class ="cell noprint">
-                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddSubject() }">Add subject</Button>
-                        </div>
-                    </div>
-            </form>  
-            
-        </div>
-        <div class="container" id="ManageStudents">
-            <h1>List of Students</h1>
-            <form>                     
-                    <div class="row row--5cols">
-                        <div class ="cell">
-                          <input class="search_input" type="search" placeholder="Index" id="GET-index" type="text" name="firstName">
-                            
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="First name" id="GET-firstName" type="text" name="firstName">
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Last name" id="GET-lastName" type="text" name="lastName">
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Born date" id="GET-born_date" type="text" name="date">
-                        </div>
-                        <div class ="cell noprint">
-                        Actions
-                        </div>
-                    </div>
-                    <!-- ko if: self.students -->
-                        <!-- ko foreach: self.students -->
-                            <!-- ko if: firstName -->
-                                <div class="row row--5cols" >
-                                    <div class ="cell" data-bind="text: index">
-                                    </div>
-                                   <div class ="cell" data-bind="text: firstName">
-                                    </div>
-                                    <div class ="cell" data-bind="text: lastName">
-                                    </div>
-                                     <div class ="cell" data-bind="text: bornDate">
-                                    </div>
-                                    <div class ="cell noprint">
-                                        <Button class = "small_button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filterByStudent($data) }">Grades</Button>
-                                        <Button class = "small_button" data-bind="click: function() { RemoveStudent($data) }" >Delete</Button>
-                                    </div>
-                                </div>
-                            <!-- /ko --> 
-                        <!-- /ko --> 
-                    <!-- /ko --> 
-                    <div class="row row--5cols">
-                        <div class ="cell" type="input">
-                          <input class="data_input" placeholder="Index" type="text" data-bind="value: self.inputIndex">                         
-                        </div>
-                         <div class ="cell">
-                          <input class="data_input" placeholder="First name" data-bind="value: self.inputStudentFirstName">  
-                        </div> 
-                        <div class ="cell">
-                        <input class="data_input" placeholder="Last name" type="text" name="firstName" data-bind="value: self.inputStudentLastName">     
-                             </div>
-                        
-                        <div class ="cell" type="input">
-                          <input class="data_input" placeholder="yyyy-mm-dd" type="text" data-bind="value: self.inputBornDate">                         
-                        </div>
-                        <div class ="cell noprint">
-                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddStudent() }">Add student</Button>
-                        </div>
-                    </div>
+            <div class="container" id="ManageCourses">  
                 
-            </form>  
-        </div>
-        <div class="container" id="ManageSeeGrades">
-            <h1>List of Grades: 
-                <span data-bind="text: self.gradeStudentFilter().firstName"> </span> 
-                <span data-bind="text: self.gradeStudentFilter().lastName"> </span>
-            </h1>
-            <form>                
-                    <div class="row row--4cols">
+                <h1>List of Courses</h1>              
+
+                <form id="AddSubjectForm">                     
+                    <div class="row row--3cols">
+                        
                         <div class ="cell">
-                            
-                        <select class="selectBox" id="SelectSubjectToGetGrades" name="text" data-bind="options: Subjects, optionsText: 'subjectName', optionsCaption: 'Wybierz', value: selectedSubject, valueUpdate: 'input'">  
-                        </select>
-                            
-                    </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Grade"  type="text" name="grade">
+                            <input class="search_input" placeholder="Subject">                            
                         </div>
+                        
                         <div class ="cell">
-                          <input class="search_input" placeholder="Date" type="text" name="grade_date">
-                        </div>
+                            <input class="search_input" placeholder="Teacher"  type="text">
+                        </div>    
+                        
                         <div class ="cell noprint">
-                        Actions
+                            Actions
                         </div>
+                        
                     </div>
                     
-                    <!-- ko foreach: self.filterGrades() -->
-                        <!-- ko if: self.selectedSubject() -->
-                        <div class="row row--4cols">
-                            <div class ="cell" data-bind="text: self.selectedSubject().subjectName">
-                              Matematyka
-                            </div>
-                           <div class ="cell" data-bind="text: gradeValue" step="0.5" min="2.0" max ="5.5">
-                              2.0
-                            </div>
-                            <div class ="cell" data-bind="text: gradeDate">
-                              24-03-70
-                            </div>
-                            <div class ="cell noprint">
-                                <Button class = "small_button">Change</Button>
-                                <Button class = "small_button" data-bind="click: function() { RemoveGrade($data, self.selectedSubject()) }" >Delete</Button>
-                            </div>
-                        </div>
-                         <!-- /ko --> 
-                     <!-- /ko -->
-                    
-                     <div class="row row--4cols">
-                        <!-- ko if: self.selectedSubject() -->
-                        <div class ="cell" >
-                         <input class="data_input" data-bind="textInput: self.selectedSubject().subjectName" disabled>
-                         </div>
-                        <!-- /ko -->
-                        <!-- ko ifnot: self.selectedSubject() -->
-                        <div class ="cell"></div>
-                        <!-- /ko -->
-                        <div class ="cell">
-                        <input class="data_input" type="number" placeholder="Grade" data-bind="value: self.inputGradeValue" step="0.5" min="2" max="5.5" onkeydown="preventNumberInput(event)"
-               onkeyup="preventNumberInput(event)"></div> 
-                        <div class ="cell" type="input">
-                          <input class="data_input" placeholder="yyyy-mm-dd" type="text" data-bind="value: self.inputGradeDate"> </div>
+                    <!-- ko foreach: self.subjectsList -->
+                    <div  class="row row--3cols" >
+                        
+                        <div class ="cell" data-bind="text: subjectName"></div>
+                        
+                        <div class ="cell" data-bind="text: teacherFullname"></div>    
+                        
                         <div class ="cell noprint">
-                         <Button class = "small_button small_button--solo" data-bind="click: function() { AddGrade() }">Add grade</Button>
+                            <Button type="button" class = "small_button" data-bind="click: function() { StudentsBySubject($data) }">Students</Button>
+                            <Button type="button" class = "small_button" data-bind="click: function() { RemoveSubject($data) }">Delete</Button>
                         </div>
+                        
                     </div>
-               
-            </form>  
-        </div>
+                    <!-- /ko --> 
+                    
+                    <div class="row row--3cols">
+
+                        <div class ="cell noprint" >
+                            <input class="data_input" name="subjectName" placeholder="Subject" type="text" required>                         
+                        </div>
+
+                        <div class ="cell noprint">
+                            <input class="data_input" name="teacherFirstName" placeholder="First name" type="text">                 
+                            <input class="data_input" name="teacherLastName" placeholder="Last name" type="text">     
+                        </div>   
+
+                        <div class ="cell noprint">
+                            <Button id="AddSubjectButton" type="button" class = "small_button small_button--solo">Add subject</Button>
+                        </div>
+
+                    </div>
+                </form>  
+
+            </div>
             
-            <div class="container" id="ManageSeeAllGrades">
-            <h1>List of Grades: 
-                <span data-bind="text: self.gradeSubjectFilter().subjectName"> </span> 
-            </h1>
-            <form>
-                    <div class="row row--5cols">                       
-                        <div class ="cell">
-                          <input class="search_input" placeholder="First name" type="text">
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Last name" type="text">
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Grade" type="text">
-                        </div>
-                        <div class ="cell">
-                          <input class="search_input" placeholder="Date" type="text">
-                        </div>
-                        <div class ="cell noprint">
-                        Actions
-                        </div>
+            <div class="container" id="ManageStudents">
+                
+                <h1>List of Students: 
+                    <!-- ko if: self.SubjectsViewModel.activeSubject -->
+                    <span data-bind="text: self.SubjectsViewModel.activeSubject().subjectName"> </span> 
+                    <!-- /ko -->
+                </h1>
+                
+                <form id="AddStudentForm">                     
+                <div class="row row--5cols">
+                    
+                    <div class ="cell">
+                        <input class="search_input" type="search" placeholder="Index">
                     </div>
                     
-                        <!-- ko if: self.gradeSubjectFilter().gradesList -->
-                        <!-- ko foreach: self.gradeSubjectFilter().gradesList -->
-                                <div class="row row--5cols">        
-                                   <div class ="cell" data-bind="text: referencedStudent.firstName">
-                                    </div>
-                                    <div class ="cell" data-bind="text: referencedStudent.lastName">
-                                    </div>
-                                   <div class ="cell" data-bind="text: gradeValue">
-                                    </div>
-                                    <div class ="cell" data-bind="text: gradeDate">
-                                    </div>
-                                    <div class ="cell noprint">
-                                        <Button class = "small_button">Change</Button>
-                                        <Button class = "small_button"  class = "small_button" data-bind="click: function() { RemoveGrade($data, self.gradeSubjectFilter()) }" >Delete</Button>
-                                    </div>
-                                </div>
-                             <!-- /ko --> 
-                             <!-- /ko --> 
-                     <div class="row row--5cols">
-                       
+                    <div class ="cell">
+                        <input class="search_input" placeholder="First name"  type="search">
                     </div>
+                    
+                    <div class ="cell">
+                        <input class="search_input" placeholder="Last name" type="search">
+                    </div>
+                    
+                    <div class ="cell">
+                        <input class="search_input" type="search" onfocus="(this.type='date')" placeholder="Born date" >
+                    </div>
+                    
+                    <div class ="cell noprint">
+                        Actions
+                    </div>
+                    
+                </div>
+                    
+                <!-- ko foreach: self.studentsList -->
+                <div class="row row--5cols" >
+                    <div class ="cell" data-bind="text: index"></div>
+                    <div class ="cell" data-bind="text: firstName"></div>
+                    <div class ="cell" data-bind="text: lastName"></div>
+                    <div class ="cell" data-bind="text: bornDate"></div>
+                    <div class ="cell noprint">
+                        <Button type="button" id="StudentGradesButton" class = "small_button" onclick="location.href = '#ManageSeeGrades'" data-bind="click: function() { filterSubjectGradesByStudent($data) }">Grades</Button>
+                        <Button type="button" class = "small_button" data-bind="click: function() { RemoveStudent($data) }" >Delete</Button>
+                    </div>
+                </div>
+                <!-- /ko --> 
+                    
+                <div class="row row--5cols">
+                    <div class ="cell noprint">
+                        <input class="data_input" name="index" placeholder="Index" type="number" min="100000" max="999999" required>
+                    </div>
+
+                    <div class ="cell noprint">
+                        <input class="data_input" name="firstName" type="text" placeholder="First name" required>  
+                    </div> 
+
+                    <div class ="cell noprint">
+                        <input class="data_input" name="lastName"  placeholder="Last name" type="text" required>     
+                    </div>
+
+                    <div class ="cell noprint" >
+                        <input class="data_input" name="bornDate"  type="text" onfocus="(this.type='date')" placeholder="Date of birth" required>                         
+                    </div>
+
+                    <div class ="cell noprint">
+                        <Button id="AddStudentButton" type="button" class = "small_button small_button--solo">Add student</Button>
+                    </div>
+                </div>
+
                 </form>  
             </div>
             
-        </div>
+            <div class="container" id="ManageSeeGrades">
+                
+                <h1>List of Grades:
+                    
+                    <!-- ko if: self.GradesViewModel.student -->
+                    <span data-bind="text: self.GradesViewModel.student().firstName"> </span> 
+                    <span data-bind="text: self.GradesViewModel.student().lastName"> </span>
+                    <!-- /ko -->
+                </h1>
+                
+                <form id="AddGradeForm">                
+                        <div class="row row--4cols">
+                            <div class ="cell">
+
+                            <select class="selectBox" id="SelectSubjectToGetGrades"  data-bind="options: self.GradesViewModel.subjectsList, optionsText: 'subjectName', optionsCaption: 'Wybierz', value: self.GradesViewModel.selectedSubject, valueUpdate: 'input'">  
+                            </select>
+
+                        </div>
+                            <div class ="cell">
+                              <input class="search_input" placeholder="Grade"  type="text" >
+                            </div>
+                            <div class ="cell">
+                              <input class="search_input" type="date">
+                            </div>
+                            <div class ="cell noprint">
+                            Actions
+                            </div>
+                        </div>
+
+                        <!-- ko foreach: self.GradesViewModel.gradesList() -->
+                        <!-- ko if: self.GradesViewModel.selectedSubject() -->
+                            <div class="row row--4cols">
+                                <div class ="cell" data-bind="text: self.GradesViewModel.selectedSubject().subjectName">
+                                  Matematyka
+                                </div>
+                                <input class ="cell" data-bind="value: gradeValue" >
+                                <div class ="cell" data-bind="text: gradeDate">
+                                  24-03-70
+                                </div>
+                                <div class ="cell noprint">
+                                    <Button type="button" class = "small_button" data-bind="click: function() { EditGrade($data) }">Change</Button>
+                                    <Button type="button" class = "small_button" data-bind="click: function() { RemoveGrade($data) }" >Delete</Button>
+                                </div>
+                            </div>
+                         <!-- /ko -->
+                         <!-- /ko -->
+
+                         <div class="row row--4cols">
+                            <div class ="cell noprint"></div>
+                            <div class ="cell noprint">
+                            <input class="data_input" type="number" placeholder="Grade" name="gradeValue" data-bind="value: self.inputGradeValue" step="0.5" min="2" max="5.5" onkeydown="preventNumberInput(event)"
+                   onkeyup="preventNumberInput(event)" required></div> 
+                            <div class ="cell noprint">
+                              <input class="data_input" name="gradeDate" placeholder="" type="text" data-bind="value: self.inputGradeDate" disabled> </div>
+                            <div class ="cell noprint">
+                             <Button id="AddGradeButton" type="button" class = "small_button small_button--solo">Add grade</Button>
+                            </div>
+                        </div>
+
+                </form>  
+            </div>
+
+                <div class="container" id="ManageSeeAllGrades">
+                <h1>List of Grades: 
+                    <span > </span> 
+                </h1>
+                <form>
+                        <div class="row row--5cols">                       
+                            <div class ="cell">
+                              <input class="search_input" placeholder="First name" type="text">
+                            </div>
+                            <div class ="cell">
+                              <input class="search_input" placeholder="Last name" type="text">
+                            </div>
+                            <div class ="cell">
+                              <input class="search_input" placeholder="Grade" type="text">
+                            </div>
+                            <div class ="cell">
+                              <input class="search_input" type="date">
+                            </div>
+                            <div class ="cell noprint">
+                            Actions
+                            </div>
+                        </div>
+
+                    <!-- ko foreach: self.gradesList.grades -->
+                                    <div class="row row--5cols">        
+                                       <div class ="cell" >
+                                        </div>
+                                        <div class ="cell" >
+                                        </div>
+                                       <div class ="cell" data-bind="text: gradeValue"></div>
+                                        <div class ="cell" data-bind="text: gradeDate"></div>
+                                        <div class ="cell noprint">
+                                            <Button type="button" class = "small_button">Change</Button>
+                                            <Button type="button" class = "small_button"  >Delete</Button>
+                                        </div>
+                                    </div>
+
+                         <!-- /ko -->
+                         <div class="row row--5cols">
+
+                        </div>
+                    </form>  
+                </div>
+
+
+            </div>
         </div>
         <br>
         <br>

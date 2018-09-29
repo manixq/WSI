@@ -23,12 +23,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .selectBox{
-    display = flex;
+    display: flex;
     flex: 1;
 }
 
 .small_button{
-    display = flex;
+    display: flex;
     flex: 1;
     background-color: #008CBA; 
     border: none;
@@ -43,7 +43,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .small_button--solo{
-    display = flex;
+    display: flex;
     flex: 1;
     background-color: #008CBA; 
     border: none;
@@ -87,28 +87,32 @@ h1, h2, h3, h4, h5, h6 {
 
 
 nav {
-    flex-shrink: 0;
-    align-items: stretch;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: space-between;
     background-color:white;
     flex-wrap: wrap;
     
-    height: 100%;  /*allows both columns to span the full height of the browser window*/
+    height: 100%;  
     display: flex;
-    flex-direction: column;
     
     margin: 10px;
         
 }
-#mainContainer{
-    height: 100%;   
-    margin: 0px;  /*removes default style*/
-    display: flex;  /*enables flex content for its children*/
-    
+
+@media (min-width:1300px){
+    #mainContainer{
+        height: 100%;   
+        margin: 0px;  /*removes default style*/
+        display: flex;  /*enables flex content for its children*/
+
+    }    
 }
+
+@media (max-width:1300px){
+    #mainContainer{
+        height: 100%;   
+        margin: 0px;  /*removes default style*/
+    }    
+}
+
 .container{
     
     margin-left: auto;
@@ -132,18 +136,20 @@ select{
     color: white;
     border: none;
 }
+
 .search_input{
+    text-align: center;
     background: #008CB1;
-    color: black;
+    color: white;
     border: none;
 }
 .row { display: flex;
   flex-wrap: wrap;
       
 }
-.row:first-child {background: #008CBA;color:white}
-.row:nth-child(2n+3) {background: #1111}
-.row:last-child {background: #0959}
+.row:first-child {background-color: #008CBA;color:white}
+.row:nth-child(2n+3) {background-color: #E6E6E6}
+.row:last-child {background-color: #008CBA}
 .cell {
     display: flex;
     box-sizing: border-box;
@@ -158,15 +164,16 @@ select{
     
 }
 .data_input {
-    background: #0210;
-    text-align: left;
+    background: #008CBA;
+    text-align: center;
     width: 100%;   
-    border: 1px solid #0212;
+    border: 1px solid #008CBA;
     padding: 0.5em;
     margin:0.1em;
+    color: white;
 }
 .data_input::placeholder {
-    color: black;
+    color: white;
 }
 .row--2cols > .cell,.inputData {
   width: 50%;
@@ -195,13 +202,19 @@ a {
     color: white;
     text-decoration: none;
 }
-a:hover, a:visited, a:link, a:active
+
+
+a:hover
 {
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 b, strong {
     font-weight: 600;
+}
+
+input:invalid {
+  color: red;
 }
 
 samp {

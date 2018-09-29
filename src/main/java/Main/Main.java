@@ -10,8 +10,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main
@@ -23,7 +25,7 @@ public class Main
         CustomHeaders customHeaders = new CustomHeaders();
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(8080).build();
         ResourceConfig config = new ResourceConfig(request.class);
-        config.register(new DateParamConverterProvider("yyyy-MM-dd"));
+        config.register(new DateParamConverterProvider("dd/MM/yyyy"));
         config.register(customHeaders);
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
 
@@ -47,17 +49,29 @@ public class Main
         List<Grade> gradesArray2 = new ArrayList<Grade>();
         List<Grade> gradesArray3 = new ArrayList<Grade>();
 
-        studentsArray.add(new Student(123456789L,"Jan","Sobieski",new Date()));
-        studentsArray.add(new Student(432156789L,"Jan","Nowak",new Date()));
-        studentsArray.add(new Student(987656789L,"Zbyszko","Bogdaniec",new Date()));
+        Date currentDate = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        try
+        {
+            currentDate = formatter.parse(formatter.format(currentDate));
+        }
+        catch (Exception ex)
+        {
+            throw new WebApplicationException("Bad formatted date", 400);
+        }
 
 
-        gradesArray.add(new Grade(4.5, new Date(), studentsArray.get(0)));
-        gradesArray.add(new Grade(3.5, new Date(), studentsArray.get(1)));
-        gradesArray2.add(new Grade(3.0, new Date(), studentsArray.get(2)));
-        gradesArray2.add(new Grade(2.0, new Date(), studentsArray.get(0)));
-        gradesArray3.add(new Grade(5.0, new Date(), studentsArray.get(1)));
-        gradesArray3.add(new Grade(4.0, new Date(), studentsArray.get(2)));
+        studentsArray.add(new Student(123456789L,"Jan","Sobieski",currentDate));
+        studentsArray.add(new Student(432156789L,"Jan","Nowak",currentDate));
+        studentsArray.add(new Student(987656789L,"Zbyszko","Bogdaniec",currentDate));
+
+
+        gradesArray.add(new Grade(4.5, currentDate, studentsArray.get(0)));
+        gradesArray.add(new Grade(3.5, currentDate, studentsArray.get(1)));
+        gradesArray2.add(new Grade(3.0, currentDate, studentsArray.get(2)));
+        gradesArray2.add(new Grade(2.0, currentDate, studentsArray.get(0)));
+        gradesArray3.add(new Grade(5.0, currentDate, studentsArray.get(1)));
+        gradesArray3.add(new Grade(4.0, currentDate, studentsArray.get(2)));
 
         List<Subject> subjectsArray = new ArrayList<Subject>();
         subjectsArray.add(new Subject("Fizyka", "Marek", "Mareczko", gradesArray, studentsArray));

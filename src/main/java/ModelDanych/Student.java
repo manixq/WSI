@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -18,13 +19,14 @@ public class Student implements Serializable
 {
     @XmlTransient
     @JsonIgnore
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private ObjectId id;
     @Id
-    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    @XmlElement(type=Long.class)
     private Long index;
     private String firstName;
     private String lastName;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy", timezone="CET")
     private Date bornDate;
 
     public Student()
@@ -40,14 +42,6 @@ public class Student implements Serializable
     }
 
 
-    @XmlElement(name = "id")
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
     public Long getIndex() {
         return index;
     }
@@ -57,7 +51,7 @@ public class Student implements Serializable
     }
 
 
-    @XmlElement(name = "firstName")
+    @XmlTransient
     public String getFirstName() {
         return firstName;
     }
@@ -67,7 +61,7 @@ public class Student implements Serializable
     }
 
 
-    @XmlElement(name = "lastName")
+    @XmlTransient
     public String getLastName() {
         return lastName;
     }
@@ -76,7 +70,7 @@ public class Student implements Serializable
         this.lastName = lastName;
     }
 
-    @XmlElement(name = "bornDate")
+    @XmlTransient
     public Date getBornDate() {
         return bornDate;
     }
