@@ -28,29 +28,27 @@ var ManageStudentsViewModel = ko.observableArray();
 
 
 
+var StudentsViewModelMapping = {
+      
+    create: function(options) {
+            return new StudentViewModel(options.data);
+        },
+}
+
+var StudentViewModel = function(data) {
+    ko.mapping.fromJS(data, {}, this);
+     
+    this.fullName = ko.computed(function() {
+        return this.firstName() + " " + this.lastName();
+    }, this);
+}
+
 var SubjectsViewModelMapping = {
       
     create: function(options) {
             return new SubjectViewModel(options.data);
         },
-/*
-   'gradesList':{
-       key: function(data){
-           return ko.utils.unwrapObservable(data.id);
-       }
-   },
-    
-   'studentsList':{
-       key: function(data){
-           return ko.utils.unwrapObservable(data.index);
-       }
-   }*/
-    
-   
 }
-
-
-
 
 var SubjectViewModel = function(data) {
     ko.mapping.fromJS(data, {}, this);
@@ -79,8 +77,6 @@ $( document ).ready(function()
     self.studentsList = ko.observableArray();  
     self.subjectsList = ko.observableArray();  
     self.gradesList = ko.observableArray();     
-    //self.filterArray = ko.observableArray();
-    //self.selectedSubject = ko.observable(),
     
     self.GradesViewModel ={
         student : ko.observable(),
@@ -106,7 +102,7 @@ $( document ).ready(function()
         location.href = '#ManageStudents';
         
         SubjectsViewModel.activeSubject([]);
-        self.AjaxGet('students', {}, self.studentsList);     
+        self.AjaxGet('students', StudentsViewModelMapping, self.studentsList);     
         
     }
     
@@ -124,7 +120,7 @@ $( document ).ready(function()
         if(f.checkValidity()) 
         {
             console.log("Adding student..");
-            if(SubjectsViewModel.activeSubject().subjectName())
+            if(SubjectsViewModel.activeSubject.subjectName)
             { 
                 console.log("Adding student to subject! ..");
                 console.log(SubjectsViewModel.activeSubject().subjectName());
@@ -141,7 +137,8 @@ $( document ).ready(function()
                 index: ko.observable(lData.index),
                 firstName: ko.observable(lData.firstName),
                 lastName: ko.observable(lData.lastName),
-                bornDate: ko.observable(lDate.toLocaleDateString("en-US"))
+                bornDate: ko.observable(lDate.toLocaleDateString("en-US")),                
+                fullName: ko.observable(lData.firstName + " " + lData.lastName),
             });  
         }
     }  
@@ -249,7 +246,6 @@ $( document ).ready(function()
         console.log("Editing grade..");
         if(grade.gradeValue["oldValue"])
             {                
-            console.log(grade.gradeValue["oldValue"]);
             self.AjaxPut("update/grade?", "gradeDate=" + grade.gradeDate() + "&gradeValue=" + grade.gradeValue["oldValue"] + "&gradeNewValue=" + grade.gradeValue());
             grade.gradeValue["oldValue"] = undefined;
             }

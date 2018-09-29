@@ -51,7 +51,7 @@
                         
                         <div class ="cell" data-bind="text: subjectName"></div>
                         
-                        <div class ="cell" data-bind="text: teacherFullname"></div>    
+                        <input class ="cell" data-bind="text: teacherFullname">   
                         
                         <div class ="cell noprint">
                             <Button type="button" class = "small_button" data-bind="click: function() { StudentsBySubject($data) }">Students</Button>
@@ -126,7 +126,32 @@
                     </div>
                 </div>
                 <!-- /ko --> 
+                
+                <!-- ko ifnot: self.SubjectsViewModel.activeSubject -->    
+                <div class="row row--5cols">
+                    <div class ="cell noprint">
+                        <input class="data_input" name="index" placeholder="Index" type="number" min="100000" max="999999" required>
+                    </div>
+
+                    <div class ="cell noprint">
+                        <input class="data_input" name="firstName" type="text" placeholder="First name" required>  
+                    </div> 
+
+                    <div class ="cell noprint">
+                        <input class="data_input" name="lastName"  placeholder="Last name" type="text" required>     
+                    </div>
+
+                    <div class ="cell noprint" >
+                        <input class="data_input" name="bornDate"  type="text" onfocus="(this.type='date')" placeholder="Date of birth" required>                         
+                    </div>
+
+                    <div class ="cell noprint">
+                        <Button id="AddStudentButton" type="button" class = "small_button small_button--solo">Add student</Button>
+                    </div>
+                </div>                
+                <!-- /ko -->       
                     
+                <!-- ko if: self.SubjectsViewModel.activeSubject -->
                 <div class="row row--5cols">
                     <div class ="cell noprint">
                         <input class="data_input" name="index" placeholder="Index" type="number" min="100000" max="999999" required>
@@ -148,6 +173,8 @@
                         <Button id="AddStudentButton" type="button" class = "small_button small_button--solo">Add student</Button>
                     </div>
                 </div>
+                <!-- /ko -->         
+                    
 
                 </form>  
             </div>

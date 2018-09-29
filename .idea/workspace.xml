@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67ba9ffc-79c8-4d03-af06-9f6b0e124cdb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/myscript.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/myscript.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main/CustomHeaders.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/CustomHeaders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main/request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main/request.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ModelDanych/Grade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ModelDanych/Grade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ModelDanych/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ModelDanych/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ModelDanych/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ModelDanych/Subject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main/CustomHeaders.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main/CustomHeaders.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main/request.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main/request.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ModelDanych/Grade.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ModelDanych/Grade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ModelDanych/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ModelDanych/Student.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ModelDanych/Subject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ModelDanych/Subject.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -92,8 +77,8 @@
       <file leaf-file-name="request.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Main/request.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="426" column="26" selection-start-line="426" selection-start-column="26" selection-end-line="426" selection-end-column="26" />
+            <state relative-caret-position="17">
+              <caret line="418" column="32" selection-start-line="418" selection-start-column="32" selection-end-line="418" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -786,8 +771,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Main/request.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="426" column="26" selection-start-line="426" selection-start-column="26" selection-end-line="426" selection-end-column="26" />
+        <state relative-caret-position="17">
+          <caret line="418" column="32" selection-start-line="418" selection-start-column="32" selection-end-line="418" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

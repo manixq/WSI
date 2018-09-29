@@ -149,12 +149,13 @@ select{
 }
 .row:first-child {background-color: #008CBA;color:white}
 .row:nth-child(2n+3) {background-color: #E6E6E6}
+.row:nth-child(2n+3) > input {background-color: #E6E6E6}
 .row:last-child {background-color: #008CBA}
 .cell {
     display: flex;
     box-sizing: border-box;
     justify-content: center;
-    text-align: left;
+    text-align: center;
     flex-grow: 1;
     padding: 0.8em 1.2em;
     overflow: hidden; 
@@ -164,7 +165,7 @@ select{
     
 }
 .data_input {
-    background: #008CBA;
+    background-color: #008CBA;
     text-align: center;
     width: 100%;   
     border: 1px solid #008CBA;
@@ -227,9 +228,11 @@ img {
     margin: 1.3em auto;
     max-width: 95%;
 }
+
 #foot{
     text-align: center;
 }
+
 #indeks{
 -webkit-user-select: none;
 -khtml-user-select: none;

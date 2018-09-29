@@ -416,15 +416,31 @@ public class request
 
     @DELETE
     @Path("/delete/grade")
-    public Response deleteGrade(@DefaultValue("") @QueryParam("id") ObjectId id, @DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("0") @QueryParam("gradeValue") double gradeValue, @DefaultValue("") @QueryParam("gradeDate") String gradeDate, @QueryParam("index") long index) {
+    public Response deleteGrade(@DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("0") @QueryParam("gradeValue") double gradeValue, @DefaultValue("") @QueryParam("gradeDate") String gradeDate, @QueryParam("index") long index) {
         final Query<Grade> query = Main.datastore.createQuery(Grade.class);
         final Query<Subject> queryRef;
 
         if(!gradeDate.isEmpty())
         {
-            List<Grade> deleteGrade = query.field("id").equal(id).asList();
 
-            if(deleteGrade.size() > 0) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            try
+            {
+                query.field("gradeDate").equal(formatter.parse(gradeDate));
+            }
+            catch (Exception ex)
+            {
+                throw new WebApplicationException("Bad formatted date", 400);
+            }
+            Grade deleteGrade = null;
+            query.field("gradeValue").equal(gradeValue);
+            for(Grade lGrade : query.asList())
+            {
+                if(lGrade.getReferencedStudent().getIndex().equals(index)) {
+                    deleteGrade = lGrade;
+                }
+            }
+            if(!deleteGrade.equals(null)) {
                 queryRef = Main.datastore.createQuery(Subject.class).field("gradesList").hasThisElement(deleteGrade);
                 for (Subject s : queryRef.asList()) {
                     for (int i = s.getGradesList().size() - 1; i >= 0; i--) {
@@ -520,14 +536,27 @@ public class request
     @PUT
     @Consumes({"application/xml", "application/json"})
     @Path("update/grade")
-    public Response putSubjectGrade(@DefaultValue("") @QueryParam("id") ObjectId id,@DefaultValue("") @QueryParam("gradeDate") String gradeDate, @DefaultValue("0") @QueryParam("gradeValue") double gradeValue, @DefaultValue("0") @QueryParam("gradeNewValue") double gradeNewValue)
+    public Response putSubjectGrade(@DefaultValue("") @QueryParam("gradeDate") String gradeDate, @DefaultValue("0") @QueryParam("gradeValue") double gradeValue, @DefaultValue("0") @QueryParam("gradeNewValue") double gradeNewValue)
     {
         if(!gradeDate.isEmpty()) {
             if(gradeNewValue > 0) {
                 final Query<Grade> query = Main.datastore.createQuery(Grade.class);
 
 
-                List<Grade> lGradeList = query.field("id").equal(id).asList();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                try
+                {
+                    query.field("gradeDate").equal(formatter.parse(gradeDate));
+                }
+                catch (Exception ex)
+                {
+                    throw new WebApplicationException("Bad formatted date", 400);
+                }
+
+
+
+
+                List<Grade> lGradeList = query.field("gradeValue").equal(gradeValue).asList();
                 if(lGradeList.size() > 0) {
 
                     final UpdateOperations<Grade> updateOperations = Main.datastore.createUpdateOperations(Grade.class).set("gradeValue", gradeNewValue);
