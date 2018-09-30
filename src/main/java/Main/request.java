@@ -558,7 +558,6 @@ public class request
 
                 List<Grade> lGradeList = query.field("gradeValue").equal(gradeValue).asList();
                 if(lGradeList.size() > 0) {
-
                     final UpdateOperations<Grade> updateOperations = Main.datastore.createUpdateOperations(Grade.class).set("gradeValue", gradeNewValue);
                     final UpdateResults results = Main.datastore.update(lGradeList.get(0), updateOperations);
                     return Response.status(200).build();
@@ -571,17 +570,17 @@ public class request
     @PUT
     @Consumes({"application/xml", "application/json"})
     @Path("update/subject/student")
-    public Response putSubjectStudent(@DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("") @QueryParam("index") String index)
+    public Response putSubjectStudent(@DefaultValue("") @QueryParam("subjectName") String subjectName, @DefaultValue("0") @QueryParam("index") long index)
     {
         if(!subjectName.isEmpty()) {
             final Query<Subject> query = Main.datastore.createQuery(Subject.class);
-            query.field("subjectName").equal(subjectName);
+            Subject lSubject = query.field("subjectName").equal(subjectName).get();
             final Query<Student> query2 = Main.datastore.createQuery(Student.class);
-            query2.field("index").equal(index);
+            Student lStudent = query2.field("index").equal(index).get();
 
-            query.get().addStudent(query2.get());
+            lSubject.addStudent(lStudent);
 
-            Main.datastore.save(query);
+            Main.datastore.save(lSubject);
 
             return Response.status(200).build();
         }

@@ -9,25 +9,6 @@ var rootURL = "http://localhost:8080/";
     e.preventDefault();
 }
 
-
-//-----------------REWORK--------------------
-var StudentViewModel = function () {
-    self.index = ko.observable();
-    self.firstName = ko.observable();
-    self.lastName = ko.observable();
-    self.bornDate = ko.observable();
-};
-
-var ManageStudentsViewModel = ko.observableArray();
-
- self.filterGrades = ko.computed(function() 
-{        
-
-});
-
-
-
-
 var StudentsViewModelMapping = {
       
     create: function(options) {
@@ -58,9 +39,6 @@ var SubjectViewModel = function(data) {
     }, this);
 }
 
-
-
-
 function getFormData($form){
     var unindexed_array = $form.serializeArray();
     var indexed_array = {};
@@ -75,8 +53,19 @@ function getFormData($form){
 $( document ).ready(function() 
 {
     self.studentsList = ko.observableArray();  
+    self.globalStudentList = ko.observableArray();  
     self.subjectsList = ko.observableArray();  
-    self.gradesList = ko.observableArray();     
+    self.gradesList = ko.observableArray(); 
+    self.fastAddStudent = ko.observable();
+    self.fastAddStudent.subscribe(function(student) 
+    {
+        if(student != undefined)
+        {
+            self.AjaxPut("update/subject/student?", "index=" + student.index() + "&subjectName=" + self.SubjectsViewModel.activeSubject().subjectName());
+            if(self.studentsList.indexOf(student) < 0)
+                self.studentsList.push(student);
+        }
+    });  
     
     self.GradesViewModel ={
         student : ko.observable(),
@@ -85,16 +74,21 @@ $( document ).ready(function()
         subjectsList: ko.observableArray()
     }; 
     
+    self.StudentsViewModel ={
+        studentsList : self.studentsList,        
+        globalStudentList : self.globalStudentList
+    }; 
+    
     self.SubjectsViewModel ={
         subjectsList : self.subjectsList,
         activeSubject : ko.observable()
     }; 
      
     
-    ko.applyBindings(self.studentsList, document.getElementById("ManageStudents"));
+    ko.applyBindings(self.StudentsViewModel, document.getElementById("ManageStudents"));
     ko.applyBindings(self.SubjectsViewModel, document.getElementById("ManageCourses"));
-    //ko.applyBindings(self.gradesList, document.getElementById("ManageSeeAllGrades"));
     ko.applyBindings(self.GradesViewModel, document.getElementById("ManageSeeGrades"));
+       
     
     document.getElementById("ManageStudentsButton").onclick =  function()
     {    
@@ -120,7 +114,8 @@ $( document ).ready(function()
         if(f.checkValidity()) 
         {
             console.log("Adding student..");
-            if(SubjectsViewModel.activeSubject.subjectName)
+            console.log(SubjectsViewModel.activeSubject());
+            if(SubjectsViewModel.activeSubject().subjectName != undefined)
             { 
                 console.log("Adding student to subject! ..");
                 console.log(SubjectsViewModel.activeSubject().subjectName());
@@ -132,14 +127,16 @@ $( document ).ready(function()
             }
             var lData = getFormData($('#AddStudentForm'));
             var lDate = new Date(lData.bornDate);
-            self.studentsList.push(
-            {
+            var newStudent = {
                 index: ko.observable(lData.index),
                 firstName: ko.observable(lData.firstName),
                 lastName: ko.observable(lData.lastName),
                 bornDate: ko.observable(lDate.toLocaleDateString("en-US")),                
                 fullName: ko.observable(lData.firstName + " " + lData.lastName),
-            });  
+            }; 
+            
+            self.studentsList.push(newStudent);
+            self.globalStudentList.push(newStudent);
         }
     }  
      
@@ -250,7 +247,7 @@ $( document ).ready(function()
             grade.gradeValue["oldValue"] = undefined;
             }
     }
-    
+        
     self.RemoveSubject =  function(subject)
     {    
         console.log("Deleting " + subject.subjectName());
@@ -263,6 +260,10 @@ $( document ).ready(function()
         console.log("Deleting " + student.index());
         self.AjaxDelete('delete/student?index=', student.index());
         self.studentsList.remove(student);
+        self.globalStudentList.remove(function(item) 
+        {
+            return item.index() == student.index();
+        });
     }
     
     self.RemoveGrade = function (grade) 
@@ -298,6 +299,7 @@ $( document ).ready(function()
             }
         });
     }
+    AjaxGet('students', StudentsViewModelMapping, self.StudentsViewModel.globalStudentList);
     
     self.AjaxPut = function (path, data) 
     { 

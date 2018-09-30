@@ -22,7 +22,6 @@ public class Subject implements Serializable
 {
     @XmlTransient
     @JsonIgnore
-    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private ObjectId id;
     @Id
     @XmlElement(type=String.class)
@@ -30,11 +29,13 @@ public class Subject implements Serializable
     private String teacherFirstname;
     private String teacherLastname;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @XmlTransient
+    @JsonIgnore
     @Reference
     private List<Grade> gradesList;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @XmlTransient
+    @JsonIgnore
     @Reference
     private List<Student> studentsList;
 

@@ -19,7 +19,6 @@ public class Student implements Serializable
 {
     @XmlTransient
     @JsonIgnore
-    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     private ObjectId id;
     @Id
     @XmlElement(type=Long.class)

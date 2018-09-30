@@ -51,7 +51,7 @@
                         
                         <div class ="cell" data-bind="text: subjectName"></div>
                         
-                        <input class ="cell" data-bind="text: teacherFullname">   
+                        <div class ="cell" data-bind="text: teacherFullname"></div>  
                         
                         <div class ="cell noprint">
                             <Button type="button" class = "small_button" data-bind="click: function() { StudentsBySubject($data) }">Students</Button>
@@ -84,8 +84,11 @@
             <div class="container" id="ManageStudents">
                 
                 <h1>List of Students: 
-                    <!-- ko if: self.SubjectsViewModel.activeSubject -->
-                    <span data-bind="text: self.SubjectsViewModel.activeSubject().subjectName"> </span> 
+                    <!-- ko with: self.SubjectsViewModel.activeSubject() -->
+                    <!-- ko with: self.SubjectsViewModel.activeSubject().subjectName -->
+                    <span data-bind="text: self.SubjectsViewModel.activeSubject().subjectName"></span>
+                    <select class="selectBox" id="FastAddStudent"  data-bind="options: self.StudentsViewModel.globalStudentList, optionsText: 'fullName', optionsCaption: 'Dodaj istniejącego studenta', value: self.fastAddStudent"></select>
+                    <!-- /ko -->
                     <!-- /ko -->
                 </h1>
                 
@@ -127,7 +130,6 @@
                 </div>
                 <!-- /ko --> 
                 
-                <!-- ko ifnot: self.SubjectsViewModel.activeSubject -->    
                 <div class="row row--5cols">
                     <div class ="cell noprint">
                         <input class="data_input" name="index" placeholder="Index" type="number" min="100000" max="999999" required>
@@ -148,33 +150,7 @@
                     <div class ="cell noprint">
                         <Button id="AddStudentButton" type="button" class = "small_button small_button--solo">Add student</Button>
                     </div>
-                </div>                
-                <!-- /ko -->       
-                    
-                <!-- ko if: self.SubjectsViewModel.activeSubject -->
-                <div class="row row--5cols">
-                    <div class ="cell noprint">
-                        <input class="data_input" name="index" placeholder="Index" type="number" min="100000" max="999999" required>
-                    </div>
-
-                    <div class ="cell noprint">
-                        <input class="data_input" name="firstName" type="text" placeholder="First name" required>  
-                    </div> 
-
-                    <div class ="cell noprint">
-                        <input class="data_input" name="lastName"  placeholder="Last name" type="text" required>     
-                    </div>
-
-                    <div class ="cell noprint" >
-                        <input class="data_input" name="bornDate"  type="text" onfocus="(this.type='date')" placeholder="Date of birth" required>                         
-                    </div>
-
-                    <div class ="cell noprint">
-                        <Button id="AddStudentButton" type="button" class = "small_button small_button--solo">Add student</Button>
-                    </div>
-                </div>
-                <!-- /ko -->         
-                    
+                </div>                     
 
                 </form>  
             </div>
@@ -214,7 +190,7 @@
                                 <div class ="cell" data-bind="text: self.GradesViewModel.selectedSubject().subjectName">
                                   Matematyka
                                 </div>
-                                <input class ="cell" data-bind="value: gradeValue" >
+                                <input class ="cell" data-bind="value: gradeValue" min="2.0" max="5.5" >
                                 <div class ="cell" data-bind="text: gradeDate">
                                   24-03-70
                                 </div>
